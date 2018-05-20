@@ -1,33 +1,35 @@
 <template>
   <el-row id="app">
     <h1>Planning pour {{ planning.codeFormation }}</h1>
-    <div>
-      <form action="">
-        <div class="block">
-          <el-date-picker
-            v-model="periodeFormation"
-            value-format="yyyy-MM-dd"
-            type="daterange"
-            start-placeholder="Début de la formation"
-            end-placeholder="Fin de la formation"
-            firstDayOfWeek="2">
-          </el-date-picker>
-        </div>
-        <!--<label>debut : <input v-model="planning.periodeFormation.debut" type="date"></label>-->
-        <!--<label>fin : <input v-model="planning.periodeFormation.fin" type="date"></label>-->
-        <el-select v-model="selectedLieux" multiple placeholder="Lieux">
-          <el-option
-            v-for="lieu in lieux"
-            :key="lieu.codeLieu"
-            :label="lieu.libelle"
-            :value="lieu.codeLieu">
-          </el-option>
-        </el-select>
+    <el-tabs :tab-position="right" style="height: 200px;">
+    <el-tab-pane label="Planning">
+      <div>
+        <form action="">
+          <div class="block">
+            <el-date-picker
+              v-model="periodeFormation"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              start-placeholder="Début de la formation"
+              end-placeholder="Fin de la formation"
+              firstDayOfWeek="2">
+            </el-date-picker>
+          </div>
+          <!--<label>debut : <input v-model="planning.periodeFormation.debut" type="date"></label>-->
+          <!--<label>fin : <input v-model="planning.periodeFormation.fin" type="date"></label>-->
+          <el-select v-model="selectedLieux" multiple placeholder="Lieux">
+            <el-option
+              v-for="lieu in lieux"
+              :key="lieu.codeLieu"
+              :label="lieu.libelle"
+              :value="lieu.codeLieu">
+            </el-option>
+          </el-select>
 
-        <el-button type="primary" round plain v-on:click="showPlanning()">Générer</el-button>
-      </form>
-    </div>
-    <div>
+          <el-button type="primary" round plain v-on:click="showPlanning()">Générer</el-button>
+        </form>
+      </div>
+      <div>
       <div v-if="loading" class="message">
         Géneration des plannings en cours...</div>
       </div>
@@ -59,6 +61,12 @@
           </tr>
         </table>
       </div>
+    </el-tab-pane>
+    <el-tab-pane label="Contraintes">Contraintes</el-tab-pane>
+    <el-tab-pane label="Modules">Modules</el-tab-pane>
+    <el-tab-pane label="Historique">Historique</el-tab-pane>
+  </el-tabs>
+
     </el-row>
 </template>
 
@@ -74,7 +82,7 @@ require('vue-simple-calendar/dist/static/css/holidays-us.css')
 export default {
   name: 'app',
 
-  data() {
+  data () {
     return {
       showDate: new Date(),
       periodeFormation: ['2018-01-02', '2019-03-11'],
