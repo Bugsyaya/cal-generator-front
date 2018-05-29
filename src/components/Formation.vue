@@ -4,11 +4,12 @@
     <div>
       <div v-if="loading" class="message">Reccupération des formations...</div>
     </div>
-    <div id="calendriers">
-      <ul v-for="formation in formations" v-bind:key="formation.codeFormation">
-          <li v-on:click="$router.push('/planning/' + formation.codeFormation)">{{ formation.codeFormation }} - {{ formation.libelleLong }}</li>
-      </ul>
-    </div>
+    <el-row id="calendriers">
+      <el-col :span="24" v-for="formation in formations" v-bind:key="formation.codeFormation">
+          <div class="grid-content" v-on:click="$router.push('/planning/' + formation.codeFormation)">{{ formation.codeFormation }} - {{ formation.libelleLong }}</div>
+          <br/>
+      </el-col>
+    </el-row>
   </div>
 </template>
 

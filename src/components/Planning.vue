@@ -1,63 +1,70 @@
 <template>
-  <el-row id="app">
-    <h1>Planning pour {{ planning.codeFormation }}</h1>
-    <div>
-      <form action="">
-        <div class="block">
-          <el-date-picker
-            v-model="periodeFormation"
-            value-format="yyyy-MM-dd"
-            type="daterange"
-            start-placeholder="Début de la formation"
-            end-placeholder="Fin de la formation"
-            firstDayOfWeek="2">
-          </el-date-picker>
-        </div>
-        <!--<label>debut : <input v-model="planning.periodeFormation.debut" type="date"></label>-->
-        <!--<label>fin : <input v-model="planning.periodeFormation.fin" type="date"></label>-->
-        <el-select v-model="selectedLieux" multiple placeholder="Lieux">
-          <el-option
-            v-for="lieu in lieux"
-            :key="lieu.codeLieu"
-            :label="lieu.libelle"
-            :value="lieu.codeLieu">
-          </el-option>
-        </el-select>
-
-        <el-button type="primary" round plain v-on:click="showPlanning()">Générer</el-button>
-      </form>
-    </div>
-    <div>
-      <div v-if="loading" class="message">
-        Géneration des plannings en cours...</div>
-      </div>
+  <el-row id="planning">
+      <el-row>
+        <el-col :span="24">
+          <form action="">
+            <el-row>
+              <el-col :span="12" class="block">
+                      <el-date-picker
+                      aria-required="true"
+                        v-model="periodeFormation"
+                        value-format="yyyy-MM-dd"
+                        type="daterange"
+                        start-placeholder="Début de la formation"
+                        end-placeholder="Fin de la formation"
+                        firstDayOfWeek="2">
+                      </el-date-picker>
+              </el-col>
+              <el-col :span="12">
+                <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading">Générer</el-button>
+              </el-col>
+            </el-row>
+          </form>
+        </el-col>
+      </el-row>
       <div v-if="!calendriers.length && loaded && !loading" class="message">
         Aucune solution possible pour les paramètres donnés.
       </div>
-      <div id="calendriers" v-if="!loading">
-        <table v-for="cal in calendriers" v-bind:key="cal.id">
-          <tr>
-            <th>Cours</th>
-            <th>Durée</th>
-            <th>Début</th>
-            <th>Fin</th>
-            <th>Lieu</th>
-          </tr>
-          <tr v-for="cou in cal.cours" v-bind:key="cou.idCours">
-            <td>{{ cou.libelleCours }}</td>
-            <td>{{ cou.dureeReelleEnHeures }}</td>
-            <td>{{ cou.debut }}</td>
-            <td>{{ cou.fin }}</td>
-            <td>{{ cou.lieu.libelle }}</td>
-          </tr>
-          <tr class="total">
-            <td>Total</td>
-            <td>{{ cal.nbTotalHeures }}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
+
+      <div id="containerCalendriers" v-if="!loading">
+        <div id="containerModule">
+          <el-tabs tab-position="right" id="listeModules">
+              <el-tab-pane label="Module de la formation">
+                <div v-for="mod in needModules" v-bind:key="mod.idModule">
+                  {{ mod.libelleCourt }}
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="Module hors formation"></el-tab-pane>
+            </el-tabs>
+        </div>
+        <div id="calendrier">
+          <div v-for="cal in calendriers" v-bind:key="cal.idCalendrier">
+            <table>
+              <tr>
+                <th>Cours</th>
+                <th>Durée</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Lieu</th>
+              </tr>
+              <tr v-for="cou in cal.cours" v-bind:key="cou.idCours">
+                <td>{{ cou.libelleCours }}</td>
+                <td>{{ cou.dureeReelleEnHeures }}</td>
+                <td>{{ cou.debut }}</td>
+                <td>{{ cou.fin }}</td>
+                <td>{{ cou.lieu.libelle }}</td>
+              </tr>
+              <tr class="total">
+                <td>Total</td>
+                <td>{{ cal.nbTotalHeures }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </table>
+            <el-button type="primary" round plain :loading="loading">Check</el-button>
+          </div>
+        </div>
       </div>
     </el-row>
 </template>
@@ -72,9 +79,9 @@ require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
-  name: 'app',
+  name: 'planning',
 
-  data() {
+  data () {
     return {
       showDate: new Date(),
       periodeFormation: ['2018-01-02', '2019-03-11'],
@@ -86,7 +93,8 @@ export default {
         codeFormation: this.$route.params.id
       },
       calendriers: [],
-      lieux: []
+      lieux: [],
+      needModules: []
     }
   },
 
@@ -95,6 +103,7 @@ export default {
   },
   created () {
     this.getLieu()
+    this.getModulesFormation()
   },
   methods: {
     showPlanning () {
@@ -129,26 +138,53 @@ export default {
       axios.get('http://localhost:9000/lieux').then(response => {
         this.lieux = response.data
       })
+    },
+    getModulesFormation () {
+      axios.get('http://localhost:9000/formations/' + this.$route.params.id + '/modules').then(response => {
+        this.needModules = response.data
+      })
     }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  /*color: #2c3e50;*/
-  /*height: 67vh;*/
-  /*width: 90vw;*/
-  /*margin-left: auto;*/
-  /*margin-right: auto;*/
+#containerModule {
+  display: flex;
+  order: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-#calendriers {
+#planning {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+#listeModules {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+  justify-content: flex;
+  order: 1;
+}
+
+#tabCal {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
+}
+
+#calendrier {
+  width:100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  
+}
+
+#containerCalendriers {
+  display: flex;
 }
 
 form {

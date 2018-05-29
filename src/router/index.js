@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
+import PlanningLayout from '@/components/PlanningLayout'
 import Planning from '@/components/Planning'
 import Formation from '@/components/Formation'
 
@@ -16,8 +17,15 @@ export default new Router({
     // },
     {
       path: '/planning/:id',
-      name: 'Planning',
-      component: Planning
+      name: 'PlanningLayout',
+      component: PlanningLayout,
+      children: [
+        {
+          path: 'planning',
+          name: 'Planning',
+          component: Planning
+        }
+      ]
     },
     {
       path: '/formation',
