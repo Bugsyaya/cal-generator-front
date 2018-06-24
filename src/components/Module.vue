@@ -1,5 +1,5 @@
 <template>
-  <el-transfer
+  <el-transfer>
     filterable
     filter-placeholder="Libellé du module"
     :titles="['Modules', 'Nécessite']"
@@ -38,5 +38,9 @@ export default {
   .el-transfer-panel__item {
     /* padding: 1em !important; */
     margin-left: 0em !important;
+  }
+
+  #module {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
   }
 </style>
