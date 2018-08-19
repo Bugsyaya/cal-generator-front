@@ -96,6 +96,7 @@
             });
           }
         },
+        s
 
         goBack() {
           this.$router.push('/listeFormation/');
