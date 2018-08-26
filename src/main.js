@@ -21,6 +21,13 @@ window.JQuery = require('jquery')
 Vue.use(ElementUI, { locale })
 /* Vue.use(BootstrapVue); */
 Vue.config.productionTip = false
+Vue.use(Vuetify)
+
+Vue.use(DaySpanVuetify, {
+  methods: {
+    getDefaultEventColor: () => '#1976d2'
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

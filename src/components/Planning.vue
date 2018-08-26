@@ -54,8 +54,8 @@ require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'planning',
-
   data () {
+    calendar: Calendar.years()
     return {
       showDate: new Date(),
       periodeFormation: ['2018-01-02', '2019-03-11'],
