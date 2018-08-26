@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import * as api from '../api'
 
 export default {
   name: 'formation',
@@ -33,11 +33,9 @@ export default {
   methods: {
     getFormation () {
       this.loading = true
-      axios
-        .get('http://localhost:9000/formations')
-        .then(response => {
-          this.formations = response.data
-        })
+      api.getFormations().then(response => {
+        this.formations = response.data
+      })
       this.loaded = true
       this.loading = false
     }

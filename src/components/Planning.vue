@@ -71,7 +71,7 @@
 
 <script>
 import CalendarView from 'vue-simple-calendar'
-import axios from 'axios'
+import * as api from '../api'
 // The next two lines are processed by webpack. If you're using the component without webpack compilation,
 // you should just create <link> elements for these as you would normally for CSS files. Both of these
 // CSS files are optional, you can create your own theme if you prefer.
@@ -109,12 +109,11 @@ export default {
     showPlanning () {
       this.loading = true
       const [debut, fin] = this.periodeFormation
-      axios
-        .post('http://localhost:9000/generationCal', {
-          ...this.planning,
-          periodeFormation: { debut, fin },
-          contraintes: [{ idLieux: this.selectedLieux }]
-        })
+      api.generateCalendar({
+        ...this.planning,
+        periodeFormation: { debut, fin },
+        contraintes: [{ idLieux: this.selectedLieux }]
+      })
         .then(response => {
           this.calendriers = response.data
             .filter(calendrier => calendrier.cours.length)
@@ -135,12 +134,12 @@ export default {
         })
     },
     getLieu () {
-      axios.get('http://localhost:9000/lieux').then(response => {
+      api.getLieux().then(response => {
         this.lieux = response.data
       })
     },
     getModulesFormation () {
-      axios.get('http://localhost:9000/formations/' + this.$route.params.id + '/modules').then(response => {
+      api.getModulesByCodeFormation(this.$route.params.id).then(response => {
         this.needModules = response.data
       })
     }
