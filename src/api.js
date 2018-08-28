@@ -3,7 +3,8 @@ import axios from 'axios'
 const API_URL = 'http://192.168.1.14:9000'
 
 const fetcher = {
-  get: url => axios.get(`${API_URL}/${url}`)
+  get: url => axios.get(`${API_URL}/${url}`),
+  post: (url, data) => axios.post(`${API_URL}/${url}`, data)
 }
 
 export const getLieux = () => fetcher.get('lieux')

@@ -8,17 +8,13 @@ import ListeModule from '@/components/ModuleD/ListeModule'
 import InfoModule from '@/components/ModuleD/InfoModule'
 import ListeFormation from '@/components/FormationD/ListeFormation'
 import InfoFormation from '@/components/FormationD/InfoFormation'
+import Calendar from '@/components/Calendar'
 
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'HelloWorld',
-    //   component: HelloWorld
-    // },
     {
       path: '/planning/:id',
       name: 'PlanningLayout',
@@ -59,5 +55,10 @@ export default new Router({
       name: 'InfoFormation',
       component: InfoFormation
     },
+    {
+      path: '/test',
+      name: 'test',
+      component: Calendar
+    }
   ]
 })

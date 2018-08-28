@@ -55,7 +55,7 @@ form {
   margin: 2em;
 }
 
-table {
+/* table {
   margin: 1em;
   border: 1px #ddd solid;
   box-shadow: #eee 5px 5px 5px;
@@ -84,7 +84,7 @@ th:nth-child(1) {
 
 tr.total {
   background-color: #ddd;
-}
+} */
 
 .message {
   font-size: 20px;
