@@ -4,7 +4,10 @@
       <el-col :span="4">
         <el-menu router default-active="2" class="grid-content el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
           <el-menu-item v-for="item in items" v-bind:key="item.nom" :index="item.url">
-            <i :class="item.icon"></i>
+              <el-badge v-if="item.icon === 'el-icon-warning'" :value="alertNumber" class="item">
+                <i :class="item.icon"></i>
+              </el-badge>
+              <i :class="item.icon" v-else></i>
             <span slot="title">{{ item.nom }}</span>
           </el-menu-item>
         </el-menu>
@@ -16,6 +19,8 @@
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
+import axios from 'axios'
+
 export default {
   name: 'monMenu',
   data: () => ({
@@ -26,11 +31,22 @@ export default {
       {nom: 'ListeModule', url: '/listeModule', icon: 'el-icon-document'},
       {nom: 'Alerte', url: '/alerte', icon: 'el-icon-warning'}
     ],
-    isCollapse: true
+    isCollapse: true,
+    alertNumber: 0,
   }),
+  created () {
+    this.getNumberAlert()
+  },
   methods: {
     log () {
       console.log('coucou')
+    },
+    getNumberAlert () {
+      axios
+        .get('http://localhost:9000/calendriers/alerte')
+        .then(response => {
+          this.alertNumber = response.data
+        })
     },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)

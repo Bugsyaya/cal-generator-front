@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import PlanningLayout from '@/components/PlanningLayout'
 import Planning from '@/components/Planning'
 import Formation from '@/components/Formation'
+import Alerte from '@/components/Alerte'
 import ListeModule from '@/components/ModuleD/ListeModule'
 import InfoModule from '@/components/ModuleD/InfoModule'
 import ListeFormation from '@/components/FormationD/ListeFormation'
@@ -31,6 +32,11 @@ export default new Router({
       path: '/formation',
       name: 'Formation',
       component: Formation
+    },
+    {
+      path: '/alerte',
+      name: 'Alerte',
+      component: Alerte
     },
     {
       path: '/listeModule',

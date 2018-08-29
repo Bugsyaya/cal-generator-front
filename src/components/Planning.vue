@@ -124,6 +124,18 @@ export default {
 </script>
 
 <style>
+.v-navigation-drawer{
+  visibility: hidden;
+}
+
+.ds-app-calendar-toolbar{
+  visibility: hidden;
+}
+
+.ds-expand{
+  padding: 0px 0px 0px 0px !important;
+}
+
 #containerModule {
   display: flex;
   order: 1;
