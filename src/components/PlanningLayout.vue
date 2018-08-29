@@ -56,7 +56,7 @@ export default {
       this.number = int
     },
     getNumber () {
-      number
+      return this.number
     }
   }
 }
