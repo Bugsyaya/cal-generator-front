@@ -32,7 +32,7 @@ export default {
       {nom: 'Alerte', url: '/alerte', icon: 'el-icon-warning'}
     ],
     isCollapse: true,
-    alertNumber: 0,
+    alertNumber: 0
   }),
   created () {
     this.getNumberAlert()

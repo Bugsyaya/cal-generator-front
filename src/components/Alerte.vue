@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import * as api from '../api'
 export default {
   name: 'alerte',
 
@@ -29,8 +29,7 @@ export default {
   methods: {
     getAlerte () {
       this.loading = true
-      axios
-        .get('http://localhost:9000/synchronise')
+      api.synchronise()
         .then(response => {
           this.calendriers = response.data
         })

@@ -30,44 +30,41 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import ContraintesModule from '../ModuleD/ContraintesModule'
+import * as api from '../../api'
+import ContraintesModule from '../ModuleD/ContraintesModule'
 
-    export default {
-        name: "InfoModule",
-        components: {ContraintesModule},
+export default {
+  name: 'InfoModule',
+  components: {ContraintesModule},
 
-        data() {
-          return {
-            module : [],
-            activeName: 'first'
-          }
-        },
-
-      created () {
-        this.getModule()
-      },
-
-      methods: {
-        getModule () {
-          axios
-              .get('http://localhost:9000/modules/' + this.$route.params.id)
-              .then(response => {
-                this.module = response.data
-              })
-          },
-        goBack() {
-          this.$router.push('/listeModule/');
-        },
-
-        handleClick(tab, event) {
-          console.log(tab, event);
-        }
-      }
-
-
+  data () {
+    return {
+      module: [],
+      activeName: 'first'
     }
+  },
 
+  created () {
+    this.getModule()
+  },
+
+  methods: {
+    getModule () {
+      api.getModulesId(this.$route.params.id)
+        .then(response => {
+          this.module = response.data
+        })
+    },
+    goBack () {
+      this.$router.push('/listeModule/')
+    },
+
+    handleClick (tab, event) {
+      console.log(tab, event)
+    }
+  }
+
+}
 
 </script>
 

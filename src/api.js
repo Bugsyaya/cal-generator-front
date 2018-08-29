@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_URL = 'http://192.168.1.14:9000'
+// const API_URL = 'http://192.168.1.14:9000'
+const API_URL = 'http://localhost:9000'
 
 const fetcher = {
   get: url => axios.get(`${API_URL}/${url}`),
@@ -18,3 +19,7 @@ export const generateCalendar = params => fetcher.post('generationCal', params)
 export const getStagiaires = () => fetcher.get('stagiaires')
 
 export const getModules = () => fetcher.get('modules')
+
+export const getModulesId = moduleId => fetcher.get(`modules/${moduleId}`)
+
+export const synchronise = () => fetcher.get('synchronise')

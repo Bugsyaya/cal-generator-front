@@ -15,8 +15,16 @@
                         firstDayOfWeek="2">
                       </el-date-picker>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="4">
                 <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading">Générer</el-button>
+              </el-col>
+              <el-col :span="4">
+                <el-button type="primary" round plain v-on:click="savePlanning()" :loading="loading" v-if="getStepNumber > 1">
+                  Sauvegarder
+                </el-button>
+                <el-button type="primary" round plain :loading="loading" v-else disabled>
+                  Sauvegarder
+                </el-button>
               </el-col>
             </el-row>
           </form>
@@ -26,10 +34,13 @@
         Aucune solution possible pour les paramètres donnés.
       </div>
       <el-row id="containerCalendriers" v-if="!loading && loaded">
-        <el-col :span="12">
+        <el-col v-if="getStepNumber > 1" :span="18">
           <Calendar v-for="calendar in calendriers" :key="calendar.id" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
         </el-col>
-        <el-col :span="12">
+        <el-col v-else :span="24">
+          <Calendar v-for="calendar in calendriers" :key="calendar.id" :calendrier="calendar" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
+        </el-col>
+        <el-col v-if="getStepNumber > 1" :span="6">
           <el-tabs tab-position="left">
               <el-tab-pane label="Module de la formation">
                 <div v-for="mod in needModules" v-bind:key="mod.idModule">
@@ -54,8 +65,11 @@ require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'planning',
+  props: {
+    setStepNumber: Function,
+    getStepNumber: Function
+  },
   data () {
-    calendar: Calendar.years()
     return {
       showDate: new Date(),
       periodeFormation: ['2018-01-02', '2019-03-11'],
@@ -68,7 +82,8 @@ export default {
       },
       calendriers: [],
       lieux: [],
-      needModules: []
+      needModules: [],
+      calendrier: Object
     }
   },
 
@@ -80,6 +95,8 @@ export default {
     this.getModulesFormation()
   },
   methods: {
+    savePlanning () {
+    },
     showPlanning () {
       this.calendriers = []
       this.loading = true
@@ -89,9 +106,10 @@ export default {
         periodOfTraining: { start, end },
         idConstraint: '67b7ef92-af36-41cf-902b-5671a7eb53f5',
         idModulePrerequisPlanning: 'marinaTest1',
-        numberOfCalendarToFound: 1
+        numberOfCalendarToFound: 5
       })
         .then(response => {
+          this.setStepNumber(1)
           this.calendriers = response.data
             .filter(calendrier => calendrier.cours.length)
             .map((calendrier, i) => ({
@@ -183,5 +201,9 @@ form {
 
 label {
   margin: 1em;
+}
+.el-table .cell {
+  word-break: normal;
+  text-align: justify;
 }
 </style>

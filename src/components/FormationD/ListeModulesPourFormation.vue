@@ -3,19 +3,18 @@
 </template>
 
 <script>
-    export default {
-        name: "ListeModulesPourFormation",
+export default {
+  name: 'ListeModulesPourFormation',
 
-      data() {
-        return {
-          listeModules: []
-        }
-      },
-
-      methods: {
-
-      }
+  data () {
+    return {
+      listeModules: []
     }
+  },
 
+  methods: {
+
+  }
+}
 
 </script>

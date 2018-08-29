@@ -8,50 +8,48 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import * as api from '../../api'
 
+export default {
 
-  export default {
+  name: 'ContraintesModules',
 
-    name: "ContraintesModules",
+  data () {
+    return {
+      module: [],
+      value: [],
+      data2: []
+    }
+  },
 
-    data() {
-      return {
-        module: [],
-        value: [],
-        data2: []
-      };
-    },
+  created () {
+    this.getListeModule()
+  },
 
-    created () {
-      this.getListeModule()
-    },
+  methods: {
+    getListeModule () {
+      api.getModules()
+        .then(response => {
+          this.module = response.data
+          this.module.forEach((name, index) => {
+            this.data2.push({
+              label: name.libelle,
+              key: index
+            })
+            console.log('test4', name.libelle)
+          })
+        })
 
-    methods: {
-      getListeModule () {
-        axios
-          .get('http://localhost:9000/modules')
-          .then(response => {
-            this.module = response.data
-            this.module.forEach((name, index) => {
-              this.data2.push({
-                label: name.libelle,
-                key: index
-              });
-              console.log('test4', name.libelle)
-            });
-          });
-
-/*          this.module.forEach((name, index) => {
+      /*          this.module.forEach((name, index) => {
             this.data2.push({
               label: name,
               key: index
             });
           });
-        console.log('test2', this.data2);*/
-      }
+        console.log('test2', this.data2); */
+    }
 
-      /*generateData () {
+    /* generateData () {
         console.log('test');
         const data = [];
         this.module.forEach((name, index) => {
@@ -61,7 +59,7 @@
           });
         });
         return data;
-      },*/
-    }
+      }, */
   }
+}
 </script>
