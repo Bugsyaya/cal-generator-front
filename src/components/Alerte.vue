@@ -2,7 +2,7 @@
   <div>
     <h1 id="alerte">Alertes</h1><el-row id="calendriers">
       <el-col :span="24" v-for="calendrier in calendriers" v-bind:key="calendrier.idCalendrier">
-          <div class="grid-content">{{ calendrier.titre }} - {{ calendrier.description }}</div>
+          <div class="grid-content" v-on:click="$router.push(`/planning/${calendrier.codeFormation}/details/${calendrier.idCalendrier}`)">{{ calendrier.titre }} - {{ calendrier.description }}</div>
           <br/>
       </el-col>
     </el-row>

@@ -1,0 +1,300 @@
+{
+  "idCalendrier": "314723da-f3dc-4ad1-9e87-0d7987cac9a1",
+  "periodOfTraining": {
+    "start": "2016-01-02",
+    "end": "2020-03-11"
+  },
+  "constraint": {
+    "idConstraint": "67b7ef92-af36-41cf-902b-5671a7eb53f5",
+    "place": {
+      "value": 1,
+      "id": "azerty"
+    }
+  },
+  "cours": [
+    {
+      "debut": "2018-01-29 00:00:00.0",
+      "fin": "2018-02-09 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HPOE1712",
+      "idCours": "86BD5A87-8796-4841-96C2-30999B3ABE7A",
+      "idModule": 302,
+      "libelleCours": "JAVA-2",
+      "dureePrevueEnHeures": 70,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-03-05 00:00:00.0",
+      "fin": "2018-03-16 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HPOE1802",
+      "idCours": "B15F237E-0FA4-43F0-A647-85DB803BF6C5",
+      "idModule": 734,
+      "libelleCours": "CONC-DEV17",
+      "dureePrevueEnHeures": 70,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-04-16 00:00:00.0",
+      "fin": "2018-04-20 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HCD17_73",
+      "idCours": "20D8C8D2-2FC7-4922-A4C6-1CAFF10C15D4",
+      "idModule": 20,
+      "libelleCours": "SQL",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-04-23 00:00:00.0",
+      "fin": "2018-04-27 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HDL17128",
+      "idCours": "F15DB3EA-1AA8-4D13-8B96-48C3E58CE504",
+      "idModule": 21,
+      "libelleCours": "PL-SQL",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-06-11 00:00:00.0",
+      "fin": "2018-06-15 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HDL17129",
+      "idCours": "C24C868C-1BD2-4FC8-89D4-6E18F47F23C0",
+      "idModule": 708,
+      "libelleCours": "16DL-POOJ",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-06-18 00:00:00.0",
+      "fin": "2018-06-22 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HDL17128",
+      "idCours": "B41E4437-5145-498A-A1C4-8DF1BE253365",
+      "idModule": 541,
+      "libelleCours": "DVWEBCL",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-07-02 00:00:00.0",
+      "fin": "2018-07-13 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HDL17129",
+      "idCours": "F818424D-09CA-4E5A-A405-42DDEEBF1B64",
+      "idModule": 725,
+      "libelleCours": "JAVA1-DL17",
+      "dureePrevueEnHeures": 70,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-07-30 00:00:00.0",
+      "fin": "2018-08-10 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HDL17128",
+      "idCours": "6075D1E3-FD17-453D-8B86-5B9B4CBFA5AC",
+      "idModule": 727,
+      "libelleCours": "PRJ2-DEV17",
+      "dureePrevueEnHeures": 105,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-08-20 00:00:00.0",
+      "fin": "2018-08-24 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HDL17128",
+      "idCours": "6A4C51CD-529F-4B6A-B8C2-0E1A7A7FC51C",
+      "idModule": 727,
+      "libelleCours": "PRJ2-DEV17",
+      "dureePrevueEnHeures": 105,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-08-27 00:00:00.0",
+      "fin": "2018-09-07 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HCD17_73",
+      "idCours": "A140AE65-7FC8-4F93-AEE8-38A9D349EC19",
+      "idModule": 34,
+      "libelleCours": "J2EAV",
+      "dureePrevueEnHeures": 70,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-09-10 00:00:00.0",
+      "fin": "2018-09-14 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HCD17_73",
+      "idCours": "C9EAD594-44CE-4F79-88E2-D1B75D274942",
+      "idModule": 731,
+      "libelleCours": "APAC-CDI17",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-09-17 00:00:00.0",
+      "fin": "2018-09-21 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HCD17_73",
+      "idCours": "993F8A4D-CBA5-412C-9966-3F3630F630E9",
+      "idModule": 36,
+      "libelleCours": "CP-COURS",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-09-24 00:00:00.0",
+      "fin": "2018-10-12 00:00:00.0",
+      "dureeReelleEnHeures": 105,
+      "codePromotion": "HCD17_73",
+      "idCours": "75EB593F-DF78-4A14-848B-5313A4BE520B",
+      "idModule": 560,
+      "libelleCours": "DVWEBASPX",
+      "dureePrevueEnHeures": 105,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-11-05 00:00:00.0",
+      "fin": "2018-11-16 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HCD17_75",
+      "idCours": "7D237DD2-4F1C-41DB-9B09-D233A5191A18",
+      "idModule": 730,
+      "libelleCours": "PRJ1-DEV17",
+      "dureePrevueEnHeures": 70,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2018-11-19 00:00:00.0",
+      "fin": "2018-11-20 00:00:00.0",
+      "dureeReelleEnHeures": 14,
+      "codePromotion": "RTSRI003",
+      "idCours": "2CF00DDF-FB7B-4C16-8C36-6C23B776FD86",
+      "idModule": 817,
+      "libelleCours": "17BILAN FINAL",
+      "dureePrevueEnHeures": 14,
+      "dateAdefinir": false,
+      "codeLieu": 2,
+      "constraints": [
+        {
+          "name": "Lieu",
+          "id": "azerty"
+        }
+      ]
+    },
+    {
+      "debut": "2018-12-10 00:00:00.0",
+      "fin": "2018-12-21 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HCD17_75",
+      "idCours": "A8FD9341-5439-4C7E-AFF4-6966F14F5BC0",
+      "idModule": 544,
+      "libelleCours": "DVWEBPH",
+      "dureePrevueEnHeures": 105,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2019-01-07 00:00:00.0",
+      "fin": "2019-01-11 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HDL17130",
+      "idCours": "1B147CB2-F7DC-45E4-BDD6-6BDF029A362D",
+      "idModule": 544,
+      "libelleCours": "DVWEBPH",
+      "dureePrevueEnHeures": 105,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2019-01-21 00:00:00.0",
+      "fin": "2019-03-15 00:00:00.0",
+      "dureeReelleEnHeures": 280,
+      "codePromotion": "ACDI_001",
+      "idCours": "A29FEEB6-4CD9-4F97-9922-F37C5315340C",
+      "idModule": 304,
+      "libelleCours": "STAGE-CDI2",
+      "dureePrevueEnHeures": 280,
+      "dateAdefinir": false,
+      "codeLieu": 11,
+      "constraints": [
+        {
+          "name": "Lieu",
+          "id": "azerty"
+        }
+      ]
+    },
+    {
+      "debut": "2019-04-08 00:00:00.0",
+      "fin": "2019-04-19 00:00:00.0",
+      "dureeReelleEnHeures": 70,
+      "codePromotion": "HCD17_75",
+      "idCours": "4F947DFC-520B-421C-98E8-064181CE9270",
+      "idModule": 728,
+      "libelleCours": "MOB1-DEV17",
+      "dureePrevueEnHeures": 70,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2019-06-17 00:00:00.0",
+      "fin": "2019-06-21 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HCD17_76",
+      "idCours": "F53B456F-CBE6-424C-9BAF-594CAB2190AE",
+      "idModule": 729,
+      "libelleCours": "PRJ3-DEV17",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    },
+    {
+      "debut": "2019-06-24 00:00:00.0",
+      "fin": "2019-06-28 00:00:00.0",
+      "dureeReelleEnHeures": 35,
+      "codePromotion": "HCD17_76",
+      "idCours": "174DEC07-CCB1-482F-8CE3-910DDA1F7467",
+      "idModule": 566,
+      "libelleCours": "XAMARIN",
+      "dureePrevueEnHeures": 35,
+      "dateAdefinir": false,
+      "codeLieu": 1,
+      "constraints": []
+    }
+  ],
+  "idModulePrerequisPlanning": "marinaTest1"
+}

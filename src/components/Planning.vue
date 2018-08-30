@@ -1,56 +1,65 @@
 <template>
   <el-row id="planning">
-      <el-row>
-        <el-col :span="24">
-          <form action="">
-            <el-row>
-              <el-col :span="12" class="block">
-                      <el-date-picker
-                      aria-required="true"
-                        v-model="periodeFormation"
-                        value-format="yyyy-MM-dd"
-                        type="daterange"
-                        start-placeholder="Début de la formation"
-                        end-placeholder="Fin de la formation"
-                        firstDayOfWeek="2">
-                      </el-date-picker>
-              </el-col>
-              <el-col :span="4">
-                <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading">Générer</el-button>
-              </el-col>
-              <el-col :span="4">
-                <el-button type="primary" round plain v-on:click="savePlanning()" :loading="loading" v-if="getStepNumber > 1">
-                  Sauvegarder
-                </el-button>
-                <el-button type="primary" round plain :loading="loading" v-else disabled>
-                  Sauvegarder
-                </el-button>
-              </el-col>
-            </el-row>
-          </form>
-        </el-col>
-      </el-row>
-      <div v-if="!calendriers.length && loaded && !loading" class="message">
-        Aucune solution possible pour les paramètres donnés.
-      </div>
-      <el-row id="containerCalendriers" v-if="!loading && loaded">
-        <el-col v-if="getStepNumber > 1" :span="18">
-          <Calendar v-for="calendar in calendriers" :key="calendar.id" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
-        </el-col>
-        <el-col v-else :span="24">
-          <Calendar v-for="calendar in calendriers" :key="calendar.id" :calendrier="calendar" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
-        </el-col>
-        <el-col v-if="getStepNumber > 1" :span="6">
-          <el-tabs tab-position="left">
-              <el-tab-pane label="Module de la formation">
-                <div v-for="mod in needModules" v-bind:key="mod.idModule">
-                  {{ mod.libelleCourt }}
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="Module hors formation"></el-tab-pane>
-            </el-tabs>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="24">
+            <form action="">
+              <el-row>
+                <el-col :span="12" class="block">
+                        <el-date-picker
+                        aria-required="true"
+                          v-model="periodeFormation"
+                          value-format="yyyy-MM-dd"
+                          type="daterange"
+                          start-placeholder="Début de la formation"
+                          end-placeholder="Fin de la formation"
+                          firstDayOfWeek="2">
+                        </el-date-picker>
+                </el-col>
+                <el-col :span="4">
+                  <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading" v-if="getStepNumber">
+                    Générer
+                  </el-button>
+                  <el-button type="primary" round plain :loading="loading" v-else disabled>
+                    {{ getStepNumber() }}
+                    Générer
+                  </el-button>
+                </el-col>
+                <el-col :span="4">
+                  <el-button type="primary" round plain v-on:click="savePlanning()" :loading="loading" v-if="getStepNumber > 0">
+                    Sauvegarder
+                  </el-button>
+                </el-col>
+              </el-row>
+            </form>
+
+            <div>
+              <router-view :needModules="needModules"></router-view>
+            </div>
+            <div>
+              <div v-if="!calendriers.length && loaded && !loading" class="message">
+                Aucune solution possible pour les paramètres donnés.
+              </div>
+              <el-row id="containerCalendriers" v-if="!loading && loaded">
+                <el-col v-if="getStepNumber > 1" :span="18">
+                  <Calendar v-for="calendar in calendriers" :key="calendar.idCalendrier" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
+                </el-col>
+                <el-col v-else :span="24">
+                  <Calendar v-for="calendar in calendriers" :key="calendar.idCalendrier" :calendrier="calendar" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
+                </el-col>
+                <el-col v-if="getStepNumber > 1" :span="6">
+                  <el-tabs tab-position="left">
+                      <el-tab-pane label="Module de la formation">
+                        <div v-for="mod in needModules" v-bind:key="mod.idModule">
+                          {{ mod.libelleCourt }}
+                        </div>
+                      </el-tab-pane>
+                      <el-tab-pane label="Module hors formation"></el-tab-pane>
+                    </el-tabs>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
+        </el-row>
     </el-row>
 </template>
 
@@ -86,7 +95,6 @@ export default {
       calendrier: Object
     }
   },
-
   components: {
     Calendar
   },
@@ -202,7 +210,7 @@ form {
 label {
   margin: 1em;
 }
-.el-table .cell {
+.el-table__row .cell {
   word-break: normal;
   text-align: justify;
 }

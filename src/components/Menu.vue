@@ -4,7 +4,7 @@
       <el-col :span="4">
         <el-menu router default-active="2" class="grid-content el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
           <el-menu-item v-for="item in items" v-bind:key="item.nom" :index="item.url">
-              <el-badge v-if="item.icon === 'el-icon-warning'" :value="alertNumber" class="item">
+              <el-badge v-if="item.icon === 'el-icon-warning'" :value="alertNumber" id="alert-badge">
                 <i :class="item.icon"></i>
               </el-badge>
               <i :class="item.icon" v-else></i>
@@ -88,5 +88,10 @@ export default {
   }
   #fieldSearch {
     height: 1em;
+  }
+  #alert-badge sup {
+    /* position: relative; */
+    top: 1.3em;
+    right: 1.2em;
   }
 </style>

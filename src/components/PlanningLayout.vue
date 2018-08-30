@@ -1,39 +1,40 @@
 <template>
   <el-row  id="planningLayout">
-    <el-row>
-      <el-col :span="24">
-        <el-row>
-          <el-col :span="12">
-            <h1 align="center" id="titre">Planning pour {{ this.$route.params.id }}</h1>
-          </el-col>
-          <el-col :span="12">
-            <el-steps :space="200" :active="number" finish-status="success" align-center class="positionInformation">
-              <el-step title="Génération" icon="el-icon-setting"></el-step>
-              <el-step title="En cours" icon="el-icon-edit"></el-step>
-              <el-step title="Vérifié" icon="el-icon-view"></el-step>
-              <el-step title="Envoyé" icon="el-icon-message"></el-step>
-              <el-step title="Terminé" icon="el-icon-check"></el-step>
-            </el-steps>
-          </el-col>
-        </el-row>
-      </el-col>
-    </el-row>
-    <el-tabs tab-position="top" class="positionInformation">
-      <el-tab-pane label="Planning">
-        <Planning :setStepNumber="setNumber" :getStepNumber="getNumber"/>
-      </el-tab-pane>
-      <el-tab-pane label="Contraintes">
-        <Contraintes/>
-      </el-tab-pane>
-      <el-tab-pane label="Modules">
-        <Modules/>
-      </el-tab-pane>
-      <el-tab-pane label="Historique">Historique</el-tab-pane>
-    </el-tabs>
+      <el-row>
+        <el-col :span="24">
+          <el-row>
+            <el-col :span="12">
+              <h1 align="center" id="titre">Planning pour {{ this.$route.params.id }}</h1>
+            </el-col>
+            <el-col :span="12">
+              <el-steps :space="200" :active="number" finish-status="success" align-center class="positionInformation">
+                <el-step title="Génération" icon="el-icon-setting"></el-step>
+                <el-step title="En cours" icon="el-icon-edit"></el-step>
+                <el-step title="Vérifié" icon="el-icon-view"></el-step>
+                <el-step title="Envoyé" icon="el-icon-message"></el-step>
+                <el-step title="Terminé" icon="el-icon-check"></el-step>
+              </el-steps>
+            </el-col>
+          </el-row>
+        </el-col>
+      </el-row>
+      <el-tabs tab-position="top" class="positionInformation">
+        <el-tab-pane label="Planning">
+          <Planning :setStepNumber="setNumber" :getStepNumber="getNumber"/>
+        </el-tab-pane>
+        <el-tab-pane label="Contraintes">
+          <Contraintes/>
+        </el-tab-pane>
+        <el-tab-pane label="Modules">
+          <Modules/>
+        </el-tab-pane>
+        <el-tab-pane label="Historique">Historique</el-tab-pane>
+      </el-tabs>
   </el-row>
 </template>
 
 <script>
+import * as api from '../api'
 import Planning from './Planning'
 import Contraintes from './Contrainte'
 import Modules from './Module'
@@ -48,8 +49,15 @@ export default {
   components: {Planning, Contraintes, Modules},
   data () {
     return {
-      number: 0
+      number: 0,
+      calendriers: [],
+      lieux: [],
+      needModules: [],
+      calendrier: Object
     }
+  },
+  created () {
+    this.getCalendrier()
   },
   methods: {
     setNumber (int) {
@@ -57,6 +65,11 @@ export default {
     },
     getNumber () {
       return this.number
+    },
+    getCalendrier () {
+      api.getCalendriers().then(response => {
+        this.calendriers = response.date
+      })
     }
   }
 }
