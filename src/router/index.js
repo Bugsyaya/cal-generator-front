@@ -12,6 +12,7 @@ import InfoFormation from '@/components/FormationD/InfoFormation'
 import Calendar from '@/components/Calendar'
 import AllPlanning from '@/components/AllPlanning'
 import DetailsPlanning from '@/components/DetailsPlanning'
+import GeneratePlanning from '@/components/GeneratePlanning'
 
 Vue.use(Router)
 
@@ -25,9 +26,13 @@ export default new Router({
     },
     {
       path: '/planning/:id',
-      name: 'PlanningLayout',
       component: PlanningLayout,
       children: [
+        {
+          path: '',
+          name: 'GeneratePlanning',
+          component: GeneratePlanning
+        },
         {
           path: 'details/:idCalendar',
           name: 'DetailsPlanning',

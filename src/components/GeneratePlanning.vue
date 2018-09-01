@@ -1,47 +1,72 @@
 <template>
   <div>
+    <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading">
+      Générer
+    </el-button>
     <div v-if="!calendriers.length && loaded && !loading" class="message">
       Aucune solution possible pour les paramètres donnés.
     </div>
     <el-row id="containerCalendriers" v-if="!loading && loaded">
-      <el-col v-if="getStepNumber > 1" :span="18">
-        <Calendar v-for="calendar in calendriers" :key="calendar.idCalendrier" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
-      </el-col>
-      <el-col v-else :span="24">
+      <el-col :span="24">
         <Calendar v-for="calendar in calendriers" :key="calendar.idCalendrier" :calendrier="calendar" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
-      </el-col>
-      <el-col v-if="getStepNumber > 1" :span="6">
-        <el-tabs tab-position="left">
-            <el-tab-pane label="Module de la formation">
-              <div v-for="mod in needModules" v-bind:key="mod.idModule">
-                {{ mod.libelleCourt }}
-              </div>
-            </el-tab-pane>
-            <el-tab-pane label="Module hors formation"></el-tab-pane>
-          </el-tabs>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
-import axios from 'axios'
+import Calendar from './Calendar'
+import * as api from '../api'
 
 export default {
   name: 'generatePlanning',
   props: {
-    calendriers: Array
+    lieux: Array,
+    needModules: Array,
+    periodeFormation: Array,
+    codeFormation: String,
+    success: Function
   },
   data: () => ({
-
+    calendriers: [],
+    loaded: false,
+    loading: false
   }),
   methods: {
-
+    showPlanning () {
+      this.calendriers = []
+      this.loading = true
+      const [start, end] = this.periodeFormation
+      api.generateCalendar({
+        codeFormation: this.codeFormation,
+        periodOfTraining: { start, end },
+        idConstraint: '67b7ef92-af36-41cf-902b-5671a7eb53f5',
+        idModulePrerequisPlanning: 'marinaTest1',
+        numberOfCalendarToFound: 5
+      })
+        .then(response => {
+          this.success()
+          this.calendriers = response.data
+            .filter(calendrier => calendrier.cours.length)
+            .map((calendrier, i) => ({
+              ...calendrier,
+              id: i,
+              nbTotalHeures: calendrier.cours.reduce(
+                (acc, cours) => acc + cours.dureeReelleEnHeures,
+                0
+              )
+            }))
+        })
+        .catch(err => console.error(err))
+        .then(() => {
+          this.loaded = true
+          this.loading = false
+        })
+    }
   },
 
   components: {
+    Calendar
   }
 }
 </script>
