@@ -1,0 +1,39 @@
+version: '3'
+services:
+  front:
+    image: bugsyaya/eni-cal-front
+    build: cal-generator-front
+    ports:
+     - "8081:80"
+
+  back:
+    image: bugsyaya/eni-cal-back
+    build: CalGeneratorBack
+    ports:
+      - "9001:80"
+    environment:
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      MONGO_DATABASE: CalDatabase
+
+      SQLSERVER_HOST: sqlserver
+      SQLSERVER_PORT: 1433
+      SQLSERVER_DATABASE: master
+      SQLSERVER_LOGIN: sa
+      SQLSERVER_PASSWORD: yourStrong(!)Password
+
+  choco:
+    image: bugsyaya/eni-cal-choco
+    build: CalGeneratorChoco
+    ports:
+      - "8001:80"
+
+  mongo:
+    image: bugsyaya/eni-mongo-base
+    ports:
+      - "27018:27017"
+
+  sqlserver:
+    image: bugsyaya/eni-sqlserver-sample-data-set
+    ports:
+     - "1434:1433"
