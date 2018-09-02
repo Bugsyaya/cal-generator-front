@@ -15,6 +15,8 @@ import 'bootstrap-select'
 /* import 'jquery' */
 import 'popper.js'
 
+import {loadConfig} from './api'
+
 window.$ = require('jquery')
 window.JQuery = require('jquery')
 
@@ -23,9 +25,11 @@ Vue.use(ElementUI, { locale })
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
+loadConfig().then(() =>
+  new Vue({
+    el: '#app',
+    router,
+    components: { App },
+    template: '<App/>'
+  })
+)

@@ -3,7 +3,9 @@ services:
   front:
     image: bugsyaya/eni-cal-front
     ports:
-     - "8081:80"
+      - "8081:80"
+    volumes:
+      - ./config.json:/usr/app/dist/static/config.json
 
   back:
     image: bugsyaya/eni-cal-back
