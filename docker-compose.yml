@@ -2,13 +2,11 @@ version: '3'
 services:
   front:
     image: bugsyaya/eni-cal-front
-    build: cal-generator-front
     ports:
      - "8081:80"
 
   back:
     image: bugsyaya/eni-cal-back
-    build: CalGeneratorBack
     ports:
       - "9001:80"
     environment:
@@ -24,7 +22,6 @@ services:
 
   choco:
     image: bugsyaya/eni-cal-choco
-    build: CalGeneratorChoco
     ports:
       - "8001:80"
 
