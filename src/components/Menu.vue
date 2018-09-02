@@ -43,7 +43,7 @@ export default {
     },
     getNumberAlert () {
       axios
-        .get('http://localhost:9000/calendriers/alerte')
+        .get('http://localhost:9001/status/alerte')
         .then(response => {
           this.alertNumber = response.data
         })
