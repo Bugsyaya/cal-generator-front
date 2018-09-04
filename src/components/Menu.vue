@@ -19,7 +19,7 @@
 <script>
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
-import axios from 'axios'
+import * as api from '../api'
 
 export default {
   name: 'monMenu',
@@ -42,8 +42,7 @@ export default {
       console.log('coucou')
     },
     getNumberAlert () {
-      axios
-        .get('http://localhost:9001/status/alerte')
+      api.getAlerteNm('alerte')
         .then(response => {
           this.alertNumber = response.data
         })

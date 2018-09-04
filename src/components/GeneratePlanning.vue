@@ -1,23 +1,47 @@
 <template>
   <div>
-    <!-- <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading">
-      Générer
-    </el-button> -->
-    <ButtonGenerate :key="buttonGenerate"/>
-    <div v-if="!calendriers.length && loaded && !loading" class="message">
-      Aucune solution possible pour les paramètres donnés.
-    </div>
-    <el-row id="containerCalendriers" v-if="!loading && loaded">
-      <el-col :span="24">
-        <Calendar v-for="calendar in calendriers" :key="calendar.idCalendrier" :calendrier="calendar" :cours="calendar.cours" :lieux="lieux" :modules="needModules"/>
+    <el-col :span="12">
+      <el-col :span="22">
+        <div class="block">
+            <span class="demonstration">Nombre de calendriers à générer</span>
+            <el-slider
+              v-model="numberOfCalendarToFound"
+              :step="1"
+              :max="10"
+              :min="1"
+              show-stops>
+            </el-slider>
+        </div>
       </el-col>
-    </el-row>
+      <el-col :span="2">
+        <el-button type="primary" round plain v-on:click="showPlanning()" :loading="loading">
+          Générer
+        </el-button>
+      </el-col>
+    </el-col>
+
+
+    <el-col :span="24">
+      <div v-if="!calendriers.length && loaded && !loading" class="message">
+        Aucune solution possible pour les paramètres donnés.
+      </div>
+      <el-row id="containerCalendriers" v-if="!loading && loaded">
+        <el-col :span="24">
+          <div v-for="calendar in calendriers" :key="calendar.idCalendrier">
+              <el-col :span="12">
+                <Calendar :calendrier="calendar" class="calendarGenerate" :cours="calendar.cours" :lieux="lieux" :modules="needModules" />
+                <MoreInfoCal :setTitle="setTitle" :setDescription="setDescription" id="moreInfoCal" titleAndDescNeeded="true" class="calendarGenerate" :calendrier="calendar" />
+              </el-col>
+          </div>
+        </el-col>
+      </el-row>
+    </el-col>
   </div>
 </template>
 
 <script>
 import Calendar from './Calendar'
-import ButtonGenerate from './ButtonGenerate'
+import MoreInfoCal from './MoreInfoCal'
 import * as api from '../api'
 
 export default {
@@ -27,12 +51,16 @@ export default {
     needModules: Array,
     periodeFormation: Array,
     codeFormation: String,
-    success: Function
+    success: Function,
+    setTitle: Function,
+    getTitle: Function,
+    setDescription: Function
   },
   data: () => ({
     calendriers: [],
     loaded: false,
-    loading: false
+    loading: false,
+    numberOfCalendarToFound: 5
   }),
   methods: {
     showPlanning () {
@@ -44,7 +72,7 @@ export default {
         periodOfTraining: { start, end },
         idConstraint: '67b7ef92-af36-41cf-902b-5671a7eb53f5',
         idModulePrerequisPlanning: 'marinaTest1',
-        numberOfCalendarToFound: 5
+        numberOfCalendarToFound: this.numberOfCalendarToFound
       })
         .then(response => {
           this.success()
@@ -69,11 +97,18 @@ export default {
 
   components: {
     Calendar,
-    ButtonGenerate
+    MoreInfoCal
   }
 }
 </script>
 
 <style>
+.calendarGenerate {
+  width: 95%;
+}
 
+.choose {
+  margin: 1em !important;
+  margin-bottom: 2em !important;
+}
 </style>

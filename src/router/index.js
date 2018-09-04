@@ -40,35 +40,6 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: '/planning/:id',
-    //   name: 'PlanningLayout',
-    //   component: PlanningLayout,
-    //   children: [
-    //     {
-    //       path: 'planning',
-    //       name: 'Planning',
-    //       component: Planning
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/planning',
-    //   name: 'PlanningLayout',
-    //   component: PlanningLayout,
-    //   children: [
-    //     {
-    //       path: ':id',
-    //       name: 'Planning',
-    //       component: Planning
-    //     },
-    //     {
-    //       path: '',
-    //       name: 'AllPlanning',
-    //       component: AllPlanning
-    //     }
-    //   ]
-    // },
     {
       path: '/formation',
       name: 'Formation',

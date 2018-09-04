@@ -1,8 +1,6 @@
 <template>
   <div>
-    <el-col :span="12">
-      <el-row>
-        <el-table :data="getPeriods()" class="calendarGenerate">
+        <el-table :data="getPeriods()" class="calendarG" v-if="calendrier.cours" max-height="750" :row-class-name="tableRowClassName">
           <el-table-column label="Date" align="center" width="100">
             <el-table-column label="Début" align="center" prop="debut" width="100" :formatter="formatDate"/>
             <el-table-column label="Fin" align="center" prop="fin" width="100" :formatter="formatDate"/>
@@ -11,41 +9,16 @@
           <el-table-column label="Classe" align="center" prop="idCours" width="180"/>
           <el-table-column label="Programme" prop="idModule" :formatter="formatLibelle"/>
         </el-table>
-        <el-col :span="2" :offset="11">
-          <el-button class="choose" round align="center" @click="dialogFormVisible = true">Choisir</el-button>
-        </el-col>
-      </el-row>
-    </el-col>
-
-    <el-dialog title="Information du planning" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form" >
-        <el-form-item label="Titre" prop="titre" :label-width="formLabelWidth">
-          <el-input v-model="form.titre" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="Description" prop="description" :label-width="formLabelWidth">
-          <el-input v-model="form.description" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="submitForm('form')">Cancel</el-button>
-        <el-button type="primary" v-on:click="submitForm('form')">Confirm</el-button>
-      </span>
-    </el-dialog>
   </div>
-
 </template>
 
 <script>
-import * as api from '../api'
-import locale from 'date-fns/locale/fr'
 import format from 'date-fns/format'
 import getDay from 'date-fns/get_day'
 import addDays from 'date-fns/add_days'
 import isSameDay from 'date-fns/is_same_day'
 import subDays from 'date-fns/sub_days'
 import sortBy from 'lodash/sortBy'
-import omit from 'lodash/omit'
 
 window.isSameDay = isSameDay
 
@@ -67,55 +40,12 @@ export default {
   props: {
     lieux: { default: () => [], type: Array },
     modules: { default: () => [], type: Array },
-    calendrier: { default: () => [], type: Object }
-  },
-  data () {
-    return {
-      dialogFormVisible: false,
-      form: {
-        titre: '',
-        description: ''
-      },
-      formLabelWidth: '120px',
-      rules: {
-        titre: [
-          { required: true, message: 'Merci de renseigner un titre', trigger: 'blur' },
-          { min: 3, max: 200, message: 'Le titre doit avoir entre 3 et 200 caractères', trigger: 'blur' }
-        ],
-        description: [
-          { required: true, message: 'Merci de renseigner une description', trigger: 'blur' },
-          { min: 3, max: 200, message: 'La description doit avoir entre 3 et 200 caractères', trigger: 'blur' }
-        ]
-      }
-    }
+    calendrier: { type: Object },
+    calendrierVerifier: { type: Object }
   },
   methods: {
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.dialogFormVisible = false
-          this.choosePlanning()
-        } else {
-          return false
-        }
-      })
-    },
-    success () {
-      this.$notify({
-        title: 'Sauvegarder',
-        message: 'Le calendrier a correctement été enregistré',
-        type: 'success'
-      })
-    },
-    error () {
-      this.$notify({
-        title: 'Erreur',
-        message: 'Une erreur s\'est produite',
-        type: 'error'
-      })
-    },
     formatDate (row, col, date) {
-      return format(date, 'ddd DD/MM/YYYY', {locale})
+      return format(date, 'DD/MM/YYYY')
     },
     formatLieu (row, col, id) {
       if (!id) return ''
@@ -126,21 +56,6 @@ export default {
       if (!id) return 'Période Entreprise'
       const m = this.modules.find(m => m.idModule === id)
       return m ? `${m.libelle}` : 'Module inconnu'
-    },
-    choosePlanning () {
-      this.dialogFormVisible = false
-      const calendrier = {
-        ...omit(this.calendrier, ['id', 'nbTotalHeures']),
-        titre: this.titre,
-        description: this.description
-      }
-
-      console.log('calendrier : ', calendrier)
-
-      api.saveCalendar(calendrier).then(response => {
-        console.log('response : ', response)
-        response.data === 'save' ? this.success() : this.error()
-      })
     },
     getPeriods () {
       if (!this.calendrier.cours.length) return []
@@ -169,22 +84,32 @@ export default {
       }
 
       return periodes
+    },
+    tableRowClassName ({row, rowIndex}) {
+      console.log('calenV :', this.calendrierVerifier)
+      if (rowIndex === 2) return 'warning-row'
+      else if (rowIndex === 3) return 'success-row'
+      return ''
     }
   }
 }
 </script>
 
 <style>
-.calendarGenerate {
-  width: 95%;
-}
-
-.el-calendarGenerate > .el-col {
+.el-calendarG > .el-col {
   margin-left: 1em !important;
 }
 
 .choose {
   margin: 1em !important;
   margin-bottom: 2em !important;
+}
+
+.el-table .warning-row {
+  background: oldlace;
+}
+
+.el-table .success-row {
+  background: #f0f9eb;
 }
 </style>
