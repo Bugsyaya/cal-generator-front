@@ -29,18 +29,7 @@
 
     <el-row>
       <el-button v-on:click="save" type="success" plain>Sauvegarder</el-button>
-      <el-button type="danger" plain>Annuler</el-button>
     </el-row>
-
-
-
-      <p> <b>tablePrerequis:</b> {{ this.tablePrerequis }}</p>
-      <p> <b>prerequisForFormation:</b> {{ this.prerequisForFormation }}</p>
-      <p></p>
-      <p> <b>tableFormation:</b> {{ this.tableFormation }}</p>
-      <p> <b>tableFormationComplet:</b> {{ this.tableFormationComplet }}</p>
-
-
   </div>
 </template>
 
@@ -72,6 +61,9 @@
       // Méthode qui met tous les prérequis dans le tableau tablePrerequis
       async getPrerequis (callback) {
         // console.log("dedbut getPrerequis")
+        // on vide le tableau avant appel
+        var l = this.tablePrerequis.length
+        this.tablePrerequis.splice(0, l)
         await axios
           .get('http://localhost:9000/modulesPrerequis')
           .then(response => {
@@ -84,9 +76,13 @@
       // Méthode qui ne garde que les prérequis pour la formation sélectionnées
       async getPrerequisForFormation (tableauPrerequis) {
         // console.log("dedbut getPrerequis")
+        // On vide le tableau avant appel
+        var l = this.prerequisForFormation.length
+        this.prerequisForFormation.splice(0, l)
         for (var i = 0; i < tableauPrerequis.length; i++) {
           if (tableauPrerequis[i].codeFormation === this.$route.params.id) {
             var obj = {}
+            obj['idPrerequis']=tableauPrerequis[i].idModulePrerequis
             obj['idModule']=tableauPrerequis[i].idModule
 
             var tabReq = []
@@ -103,6 +99,7 @@
             this.prerequisForFormation.push(obj)
           }
         }
+
         // console.log("fin getPrerequis")
       },
 
@@ -200,11 +197,176 @@
         }
       },
 
-      save () {
-        //console.log('Début Save')
-        var sizeTableDate = this.tableFormationComplet.length
+      save() {
+        // On recharge les données concernant les prerequis
+        this.getPrerequis(this.getPrerequisForFormation)
 
-        for (var i = 0; i < sizeTableDate; i++) {
+        for (var i = 0; i < this.tableFormationComplet.length; i++) {
+
+          var update = false
+          var tabReq = []
+          var idPrerequis = -1
+          for (var j = 0; j < this.tableFormationComplet[i].modulesRequisSelect.length; j++) {
+            tabReq.push(parseInt(this.tableFormationComplet[i].modulesRequisSelect[j].idM))
+          }
+
+          var tabOpt = []
+          for (var j = 0; j < this.tableFormationComplet[i].modulesOptSelect.length; j++) {
+            tabOpt.push(parseInt(this.tableFormationComplet[i].modulesOptSelect[j].idM))
+          }
+
+          var exist = false
+          for (var j = 0; j < this.prerequisForFormation.length; j++) {
+            // console.log("1-1 DEBUT | on doit vérifier si un prérequis existe pour la formation1 :", this.tableFormationComplet[i].idMod)
+            if (this.prerequisForFormation[j].idModule === this.tableFormationComplet[i].idMod) {
+              exist = true
+              idPrerequis = j
+              // console.log("1-2 idPrerequis = ", idPrerequis)
+            }
+          }
+          if (exist) {
+            // console.log("2 un prerequis existe pour cette formation : ", this.tableFormationComplet[i].idMod)
+            if ((this.tableFormationComplet[i].modulesRequisSelect.length > 0) || (this.tableFormationComplet[i].modulesOptSelect.length > 0)) {
+              // console.log("3 on doit tester si il y a eu des modif")
+              for (var j = 0; j < this.prerequisForFormation.length; j++) {
+                if (this.prerequisForFormation[j].idModule === this.tableFormationComplet[i].idMod) {
+                  var idModulePrereq=this.prerequisForFormation[j].idPrerequis
+                  // console.log("4-1 prerequis :", idModulePrereq)
+
+                  if (this.tableFormationComplet[i].modulesRequisSelect.length === 0) {
+                    if (this.prerequisForFormation[j].idModuleObligatoire.length !== 0) {
+                      var egaliteRequis = false
+                      // console.log("4-2 egaliteRequis = false")
+                    }
+                  } else {
+                    for (var k = 0; k < this.tableFormationComplet[i].modulesRequisSelect.length; k++) {
+                      var egaliteRequis = false
+                      // console.log("5 egaliteRequis = false")
+                      for (var l = 0; l < this.prerequisForFormation[j].idModuleObligatoire.length; l++) {
+                        // console.log("6 valeur prerequise de base :", this.prerequisForFormation[j].idModuleObligatoire[l])
+                        // console.log("7 valeur prerequis dans le tab :", this.tableFormationComplet[i].modulesRequisSelect[k].idM)
+                        if ( this.tableFormationComplet[i].modulesRequisSelect[k].idM === this.prerequisForFormation[j].idModuleObligatoire[l]) {
+                          egaliteRequis = true
+                          // console.log("8-1 egaliteRequis BREAK")
+                          break
+                        }
+                      }
+                    }
+                  }
+                  if (this.tableFormationComplet[i].modulesOptSelect.length === 0) {
+                    if (this.prerequisForFormation[j].idModuleOpionnel.length !== 0) {
+                      var egaliteOpt = false
+                      // console.log("8-2 egaliteOpt = false")
+                    }
+                  } else {
+                    for (var k = 0; k < this.tableFormationComplet[i].modulesOptSelect.length; k++) {
+                      var egaliteOpt = false
+                      // console.log("9 egaliteOpt = false")
+                      for (var l = 0; l < this.prerequisForFormation[j].idModuleOpionnel.length; l++) {
+                        // console.log("10 valeur prerequise de base :", this.prerequisForFormation[j].idModuleOpionnel[l])
+                        // console.log("11 valeur prerequis dans le tab :", this.tableFormationComplet[i].modulesOptSelect[k].idM)
+                        if ( this.tableFormationComplet[i].modulesOptSelect[k].idM === this.prerequisForFormation[j].idModuleOpionnel[l]) {
+                          egaliteOpt = true
+                          // console.log("12 egaliteOpt BREAK")
+                          break
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              if (!egaliteRequis || !egaliteOpt) {
+                // console.log("13 on doit update")
+                update = true
+
+              } else {
+                // console.log("14 on n'update pas")
+              }
+            } else {
+              // console.log("15-1 On test si le prérequis est vide")
+              if (this.prerequisForFormation[idPrerequis].idModuleObligatoire.length === 0 && this.prerequisForFormation[idPrerequis].idModuleOpionnel.length === 0) {
+                // console.log("15-2 Prerequis vide, pas de maj")
+              } else {
+                // console.log("15-3 Prerequis no vide, update")
+                update = true
+              }
+
+            }
+          } else {
+            // console.log("16 PAS de prerequis existe pour cette formation : ", this.tableFormationComplet[i].idMod)
+            // console.log("17 on doit vérifier s'il faut en créer un")
+            if ((this.tableFormationComplet[i].modulesRequisSelect.length > 0) || (this.tableFormationComplet[i].modulesOptSelect.length > 0)) {
+              // console.log("18 on doit créer le prerequis :", this.tableFormationComplet[i].idMod)
+
+              var uuid = Math.floor((1 + Math.random()) * 0x1000000000000)
+                .toString(16)
+                .substring(1);
+
+              var textJson = '{\n' +
+                '    "idModulePrerequis" : "' + uuid + '",\n' +
+                '    "idModule" : '+ this.tableFormationComplet[i].idMod +',\n' +
+                '    "idModuleObligatoire" : [' + tabReq.toString() + '],\n' +
+                '    "idModuleOpionnel" : [' + tabOpt.toString() + '],\n' +
+                '    "titre" : "'+ this.tableFormationComplet[i].lib +'",\n' +
+                '    "description" : "'+ this.tableFormationComplet[i].lib +'",\n' +
+                '    "codeFormation" : "'+ this.$route.params.id +'"\n' +
+                '}'
+              var objJson = JSON.parse(textJson)
+
+              axios.post('http://localhost:9000/modulesPrerequis', objJson)
+                .then(function(response){
+                  console.log('saved successfully: ', response)
+                });
+              // console.log("19 create :", this.tableFormationComplet[i].idMod)
+
+
+            } else {
+              // console.log("20 on ne fait rien")
+            }
+          }
+
+          if (update === true) {
+            // console.log("21 update : ", this.tableFormationComplet[i].idMod)
+            // console.log("22 avec prereq : ", idModulePrereq)
+
+            var textJson = '{\n' +
+              '    "idModulePrerequis" : "' + idModulePrereq + '",\n' +
+              '    "idModule" : '+ this.tableFormationComplet[i].idMod +',\n' +
+              '    "idModuleObligatoire" : [' + tabReq.toString() + '],\n' +
+              '    "idModuleOpionnel" : [' + tabOpt.toString() + '],\n' +
+              '    "titre" : "'+ this.tableFormationComplet[i].lib +'",\n' +
+              '    "description" : "'+ this.tableFormationComplet[i].lib +'",\n' +
+              '    "codeFormation" : "'+ this.$route.params.id +'"\n' +
+              '}'
+            var objJson = JSON.parse(textJson)
+
+            axios.post('http://localhost:9000/modulesPrerequisUpdate', objJson)
+              .then(function(response){
+                console.log('saved successfully: ', response)
+              });
+
+          }
+        }
+
+
+
+
+
+
+
+
+
+      },
+
+
+
+
+
+
+      saveOld () {
+        //console.log('Début Save')
+         for (var i = 0; i < this.tableFormationComplet.length; i++) {
           if ((this.tableFormationComplet[i].modulesRequisSelect.length > 0) || (this.tableFormationComplet[i].modulesOptSelect.length > 0)) {
 
             var tabReq = []
@@ -212,7 +374,7 @@
               tabReq.push(parseInt(this.tableFormationComplet[i].modulesRequisSelect[j].idM))
             }
 
-            var tabOpt = new Array()
+            var tabOpt = []
             for (var j = 0; j < this.tableFormationComplet[i].modulesOptSelect.length; j++) {
               tabOpt.push(parseInt(this.tableFormationComplet[i].modulesOptSelect[j].idM))
             }
@@ -221,7 +383,15 @@
               .toString(16)
               .substring(1);
 
-            // console.log("uuid : ", uuid)
+            var crOrUp = this.createOrUpdate(this.tableFormationComplet[i].idMod, tabReq, tabOpt)
+
+            if (crOrUp === "create") {
+              console.log("on doit :", crOrUp)
+            } else if (crOrUp = "update") {
+              console.log("on doit :", crOrUp)
+            }
+
+
 
             var textJson = '{\n' +
               '    "idModulePrerequis" : "' + uuid + '",\n' +
@@ -232,24 +402,30 @@
               '    "description" : "'+ this.tableFormationComplet[i].lib +'",\n' +
               '    "codeFormation" : "'+ this.$route.params.id +'"\n' +
               '}'
-
             var objJson = JSON.parse(textJson)
-            // console.log("Affichage de l'obj: ", objJson)
 
-            axios.post('http://localhost:9000/modulesPrerequis', objJson)
-              .then(function(response){
-                console.log('saved successfully: ', response)
-              });
+
+              axios.post('http://localhost:9000/modulesPrerequis', objJson)
+                .then(function(response){
+                  console.log('saved successfully: ', response)
+                });
+
           }
         }
       },
 
+      createOrUpdate(idModule, tabReq, tabOpt) {
+        console.log("idModule: ", idModule)
+        console.log("tabReq: ", tabReq)
+        console.log("tabOpt: ", tabOpt)
+
+        var ret = "update"
+
+        return ret;
+
+      },
+
       checkSelected(idModuleContrainte, idModuleACocher, type ) {
-        // console.log("idModule ou l'on veut ajouter une contrainte : ", idModuleContrainte)
-        // console.log("idModule a cocher : ", idModuleACocher)
-        // console.log("type de liste : ", type)
-
-
         for (var i = 0; i < this.prerequisForFormation.length; i++) {
           if (this.prerequisForFormation[i].idModule === idModuleContrainte) {
             if (type === "req") {
@@ -273,12 +449,9 @@
                   return true
                 }
               }
-
             }
           }
         }
-        // console.log("&&&&&&&&&&&&&&&On ne selectionne rien")
-
         return false
       },
 
