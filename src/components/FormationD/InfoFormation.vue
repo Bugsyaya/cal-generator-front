@@ -1,22 +1,24 @@
 <template>
   <div>
+    <br/>
     <div>
       <el-button icon="el-icon-arrow-left" @click="goBack()"></el-button>
       {{ this.$route.params.id }}
     </div>
-    <table>
-      <tr>
+    <br/>
+    <table class="table">
+      <thead>
         <th>N°</th>
         <th>Noms des modules</th>
         <th>Modules requis</th>
         <th>Modules optionnels</th>
-      </tr>
+      </thead>
       <tr v-for="item in tableFormationComplet" >
-        <th> {{ item.idMod }}__  </th>
+        <th> {{ item.idMod }} </th>
         <th> {{ item.lib }} </th>
 
-        <th><select v-on:change="ajoutModuleRequis(item.idMod, $event)" multiple class="selectpicker">
-          <option v-for="mrp in item.modulesRequisPossibles" v-if="checkSelected(item.idMod, mrp.idM, 'req')" selected> {{ mrp.idM }}</option>
+        <th><select v-on:change="ajoutModuleRequis(item.idMod, $event)" multiple class="selectpicker" >
+          <option v-for="mrp in item.modulesRequisPossibles" v-if="checkSelected(item.idMod, mrp.idM, 'req')" selected > {{ mrp.idM }}</option>
           <option v-for="mrp in item.modulesRequisPossibles" v-if="checkSelected(item.idMod, mrp.idM, 'req') === false"> {{ mrp.idM }}</option>
 
         </select></th>
@@ -26,10 +28,17 @@
         </select></th>
       </tr>
     </table>
+    <el-alert v-if="success"
+      :title=tittleAlert
+      :type=typeAlert
+      show-icon>
+    </el-alert>
+    <br/>
 
     <el-row>
-      <el-button v-on:click="save" type="success" plain>Sauvegarder</el-button>
+      <el-button v-on:click="save" type="primary" :loading="load">Sauvegarder</el-button>
     </el-row>
+    <br/>
   </div>
 </template>
 
@@ -46,6 +55,10 @@
         prerequisForFormation: [],
         tableFormation: [],
         tableFormationComplet: [],
+        load: false,
+        success: false,
+        typeAlert: null,
+        tittleAlert: null,
 
       }
     },
@@ -57,7 +70,6 @@
     },
 
     methods: {
-
       // Méthode qui met tous les prérequis dans le tableau tablePrerequis
       async getPrerequis (callback) {
         // console.log("dedbut getPrerequis")
@@ -200,6 +212,12 @@
       save() {
         // On recharge les données concernant les prerequis
         this.getPrerequis(this.getPrerequisForFormation)
+        this.load=true
+        this.success=false
+        this.typeAlert="info"
+        this.tittleAlert="Aucune mise à jour"
+        var egaliteRequis=true
+        var egaliteOpt=true
 
         for (var i = 0; i < this.tableFormationComplet.length; i++) {
 
@@ -235,19 +253,19 @@
 
                   if (this.tableFormationComplet[i].modulesRequisSelect.length === 0) {
                     if (this.prerequisForFormation[j].idModuleObligatoire.length !== 0) {
-                      var egaliteRequis = false
-                      // console.log("4-2 egaliteRequis = false")
+                      egaliteRequis = false
+                      console.log("4-2 egaliteRequis = false")
                     }
                   } else {
                     for (var k = 0; k < this.tableFormationComplet[i].modulesRequisSelect.length; k++) {
-                      var egaliteRequis = false
+                      egaliteRequis = false
                       // console.log("5 egaliteRequis = false")
                       for (var l = 0; l < this.prerequisForFormation[j].idModuleObligatoire.length; l++) {
                         // console.log("6 valeur prerequise de base :", this.prerequisForFormation[j].idModuleObligatoire[l])
                         // console.log("7 valeur prerequis dans le tab :", this.tableFormationComplet[i].modulesRequisSelect[k].idM)
                         if ( this.tableFormationComplet[i].modulesRequisSelect[k].idM === this.prerequisForFormation[j].idModuleObligatoire[l]) {
                           egaliteRequis = true
-                          // console.log("8-1 egaliteRequis BREAK")
+                          //console.log("8-1 egaliteRequis BREAK")
                           break
                         }
                       }
@@ -255,19 +273,19 @@
                   }
                   if (this.tableFormationComplet[i].modulesOptSelect.length === 0) {
                     if (this.prerequisForFormation[j].idModuleOpionnel.length !== 0) {
-                      var egaliteOpt = false
-                      // console.log("8-2 egaliteOpt = false")
+                      egaliteOpt = false
+                      console.log("8-2 egaliteOpt = false")
                     }
                   } else {
                     for (var k = 0; k < this.tableFormationComplet[i].modulesOptSelect.length; k++) {
-                      var egaliteOpt = false
+                      egaliteOpt = false
                       // console.log("9 egaliteOpt = false")
                       for (var l = 0; l < this.prerequisForFormation[j].idModuleOpionnel.length; l++) {
                         // console.log("10 valeur prerequise de base :", this.prerequisForFormation[j].idModuleOpionnel[l])
                         // console.log("11 valeur prerequis dans le tab :", this.tableFormationComplet[i].modulesOptSelect[k].idM)
                         if ( this.tableFormationComplet[i].modulesOptSelect[k].idM === this.prerequisForFormation[j].idModuleOpionnel[l]) {
                           egaliteOpt = true
-                          // console.log("12 egaliteOpt BREAK")
+                          //console.log("12 egaliteOpt BREAK")
                           break
                         }
                       }
@@ -277,18 +295,19 @@
               }
 
               if (!egaliteRequis || !egaliteOpt) {
-                // console.log("13 on doit update")
+                console.log("13 on doit update")
                 update = true
 
               } else {
                 // console.log("14 on n'update pas")
+
               }
             } else {
               // console.log("15-1 On test si le prérequis est vide")
               if (this.prerequisForFormation[idPrerequis].idModuleObligatoire.length === 0 && this.prerequisForFormation[idPrerequis].idModuleOpionnel.length === 0) {
                 // console.log("15-2 Prerequis vide, pas de maj")
               } else {
-                // console.log("15-3 Prerequis no vide, update")
+                console.log("15-3 Prerequis no vide, update")
                 update = true
               }
 
@@ -318,6 +337,8 @@
                 .then(function(response){
                   console.log('saved successfully: ', response)
                 });
+              this.typeAlert="success"
+              this.tittleAlert="Succès lors de la création des prérequis"
               // console.log("19 create :", this.tableFormationComplet[i].idMod)
 
 
@@ -345,83 +366,15 @@
               .then(function(response){
                 console.log('saved successfully: ', response)
               });
+            console.log("maj : ", idModulePrereq)
+            this.typeAlert="success"
+            this.tittleAlert="Succès lors de la mise à jour des prérequis"
+
 
           }
         }
-
-
-
-
-
-
-
-
-
-      },
-
-
-
-
-
-
-      saveOld () {
-        //console.log('Début Save')
-         for (var i = 0; i < this.tableFormationComplet.length; i++) {
-          if ((this.tableFormationComplet[i].modulesRequisSelect.length > 0) || (this.tableFormationComplet[i].modulesOptSelect.length > 0)) {
-
-            var tabReq = []
-            for (var j = 0; j < this.tableFormationComplet[i].modulesRequisSelect.length; j++) {
-              tabReq.push(parseInt(this.tableFormationComplet[i].modulesRequisSelect[j].idM))
-            }
-
-            var tabOpt = []
-            for (var j = 0; j < this.tableFormationComplet[i].modulesOptSelect.length; j++) {
-              tabOpt.push(parseInt(this.tableFormationComplet[i].modulesOptSelect[j].idM))
-            }
-
-            var uuid = Math.floor((1 + Math.random()) * 0x1000000000000)
-              .toString(16)
-              .substring(1);
-
-            var crOrUp = this.createOrUpdate(this.tableFormationComplet[i].idMod, tabReq, tabOpt)
-
-            if (crOrUp === "create") {
-              console.log("on doit :", crOrUp)
-            } else if (crOrUp = "update") {
-              console.log("on doit :", crOrUp)
-            }
-
-
-
-            var textJson = '{\n' +
-              '    "idModulePrerequis" : "' + uuid + '",\n' +
-              '    "idModule" : '+ this.tableFormationComplet[i].idMod +',\n' +
-              '    "idModuleObligatoire" : [' + tabReq.toString() + '],\n' +
-              '    "idModuleOpionnel" : [' + tabOpt.toString() + '],\n' +
-              '    "titre" : "'+ this.tableFormationComplet[i].lib +'",\n' +
-              '    "description" : "'+ this.tableFormationComplet[i].lib +'",\n' +
-              '    "codeFormation" : "'+ this.$route.params.id +'"\n' +
-              '}'
-            var objJson = JSON.parse(textJson)
-
-
-              axios.post('http://localhost:9000/modulesPrerequis', objJson)
-                .then(function(response){
-                  console.log('saved successfully: ', response)
-                });
-
-          }
-        }
-      },
-
-      createOrUpdate(idModule, tabReq, tabOpt) {
-        console.log("idModule: ", idModule)
-        console.log("tabReq: ", tabReq)
-        console.log("tabOpt: ", tabOpt)
-
-        var ret = "update"
-
-        return ret;
+        this.load=false
+        this.success=true
 
       },
 

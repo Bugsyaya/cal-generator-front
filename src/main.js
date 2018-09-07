@@ -6,30 +6,22 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/fr'
-/* import 'bootstrap/dist/css/bootstrap.css' */
-/* import 'bootstrap-vue/dist/bootstrap-vue.css' */
 import 'bootstrap-select/dist/css/bootstrap-select.min.css'
-/* import BootstrapVue from 'bootstrap-vue' */
 import 'bootstrap'
 import 'bootstrap-select'
-/* import 'jquery' */
 import 'popper.js'
-
-import {loadConfig} from './api'
 
 window.$ = require('jquery')
 window.JQuery = require('jquery')
 
+
 Vue.use(ElementUI, { locale })
-/* Vue.use(BootstrapVue); */
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-loadConfig().then(() =>
-  new Vue({
-    el: '#app',
-    router,
-    components: { App },
-    template: '<App/>'
-  })
-)
+/*eslint-disable no-new*/
+new Vue({
+  el: '#app',
+  router,
+  components: { App },
+  template: '<App/>'
+})
