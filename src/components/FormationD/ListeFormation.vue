@@ -31,7 +31,6 @@
 
       </template>
 
-
     </el-table-column>
     <el-table-column
       fixed
@@ -57,50 +56,47 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import * as api from '../../api'
 
-  export default {
-    name: 'listeFormation',
+export default {
+  name: 'listeFormation',
 
-    data () {
-      return {
-        listeFormation: [],
-        listeModule: [],
-        listeModuleAllFornations: []
-      }
+  data () {
+    return {
+      listeFormation: [],
+      listeModule: [],
+      listeModuleAllFornations: []
+    }
+  },
+
+  created () {
+    this.getListeFormation()
+    /*      this.getListeModuleAllFormations() */
+  },
+
+  methods: {
+    getListeFormation () {
+      console.log('Début getListeFormation')
+      api.getFormations()
+        .then(response => {
+          this.listeFormation = response.data.map(formation => ({
+            key: formation.codeFormation,
+            label: formation.libelleLong,
+            dureeH: formation.dureeEnHeures,
+            dureeS: formation.dureeEnSemaines
+          }))
+        })
+      console.log('Fin getListeFormation')
+      return this.listeFormation
     },
 
-    created () {
-      this.getListeFormation()
-/*      this.getListeModuleAllFormations()*/
-    },
+    getInformations (row) {
+      console.log(row)
+      var codeFormation = row.key.replace(/\s/g, '')
+      this.$router.push('/infoFormation/' + codeFormation)
+    }
 
-
-    methods: {
-      getListeFormation () {
-        console.log('Début getListeFormation')
-        axios
-          .get('http://localhost:9000/formations')
-          .then(response => {
-            this.listeFormation = response.data.map(formation => ({
-              key: formation.codeFormation,
-              label: formation.libelleLong,
-              dureeH: formation.dureeEnHeures,
-              dureeS: formation.dureeEnSemaines
-            }))
-          })
-        console.log('Fin getListeFormation')
-        return this.listeFormation
-      },
-
-      getInformations(row) {
-        console.log(row);
-        var codeFormation = row.key.replace(/\s/g, '')
-        this.$router.push('/infoFormation/' + codeFormation);
-      }
-
-
-      /*getListeModuleAllFormations () {
+    /* getListeModuleAllFormations () {
         console.log('Début getListeModuleAllFormations')
         if (this.listeFormation.length != 0) {
           for (var index = 0; index < this.listeFormation.length; index++) {
@@ -118,15 +114,12 @@
                 })))
           })}
 
-
-
         } else {
           console.log("Timeout")
           setTimeout(this.getListeModuleAllFormations,500);
         }
         console.log('Fin getListeModuleAllFormation')
-      }*/
-    }
+      } */
   }
+}
 </script>
-

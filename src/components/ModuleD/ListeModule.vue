@@ -33,42 +33,41 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import * as api from '../../api'
 
-  export default {
+export default {
 
-    name: 'ListeModule',
+  name: 'ListeModule',
 
-    data() {
-      return {
-        tableData: [],
-        loaded: false,
-        loading: false
-      }
+  data () {
+    return {
+      tableData: [],
+      loaded: false,
+      loading: false
+    }
+  },
+
+  created () {
+    this.getListeModule()
+  },
+
+  methods: {
+    getListeModule () {
+      this.loading = true
+      api.getModules()
+        .then(response => {
+          this.tableData = response.data
+          console.log('test3', this.tableData)
+        })
+
+      this.loaded = true
+      this.loading = false
     },
 
-    created () {
-      this.getListeModule()
-    },
-
-    methods: {
-      getListeModule () {
-        this.loading = true
-        axios
-          .get('http://localhost:9000/modules')
-          .then(response => {
-            this.tableData = response.data
-            console.log('test3', this.tableData)
-          }),
-
-        this.loaded = true,
-        this.loading = false
-      },
-
-      getInformations(row) {
-        console.log(row);
-        this.$router.push('/infoModule/' + row.idModule);
-      }
+    getInformations (row) {
+      console.log(row)
+      this.$router.push('/infoModule/' + row.idModule)
     }
   }
+}
 </script>

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import * as api from '../api'
 export default {
 
   data () {
@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     getModules () {
-      axios.get('http://localhost:9000/modules').then(response => {
+      api.getModules().then(response => {
         this.modules = response.data.map(module => ({key: module.idModule, label: module.libelleCourt}))
       })
     }

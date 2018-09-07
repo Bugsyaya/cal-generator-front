@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import * as api from '../api'
 export default {
   data () {
     return {
@@ -134,12 +134,12 @@ export default {
       console.log('submit!')
     },
     getLieu () {
-      axios.get('http://localhost:9000/lieux').then(response => {
+      api.getLieux().then(response => {
         this.form.lieux = response.data
       })
     },
     getStagaire () {
-      axios.get('http://localhost:9000/stagiaires').then(response => {
+      api.getStagiaires().then(response => {
         this.form.stagiaires = response.data
       })
     }
