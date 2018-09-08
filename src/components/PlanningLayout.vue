@@ -1,35 +1,27 @@
 <template>
   <el-row  id="planningLayout">
-      <el-row>
-        <el-col :span="24">
-          <el-row>
-            <el-col :span="12">
-              <h1 align="center" id="titre">Planning pour {{ this.$route.params.id }}</h1>
-            </el-col>
-            <el-col :span="12">
-              <el-steps :space="200" :active="number" finish-status="success" align-center class="positionInformation">
-                <el-step title="Génération" icon="el-icon-setting"></el-step>
-                <el-step title="En cours" icon="el-icon-edit"></el-step>
-                <el-step title="Vérifié" icon="el-icon-view"></el-step>
-                <el-step title="Envoyé" icon="el-icon-message"></el-step>
-                <el-step title="Terminé" icon="el-icon-check"></el-step>
-              </el-steps>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-tabs tab-position="top" class="positionInformation">
-        <el-tab-pane label="Planning">
-          <Planning :setStepNumber="setNumber" :getStepNumber="getNumber"/>
-        </el-tab-pane>
-        <el-tab-pane label="Contraintes">
-          <Contraintes/>
-        </el-tab-pane>
-        <el-tab-pane label="Modules">
-          <Modules/>
-        </el-tab-pane>
-        <el-tab-pane label="Historique">Historique</el-tab-pane>
-      </el-tabs>
+    <HeaderPlanning :number="number" :title="titre" :description="description"/>
+    <el-tabs tab-position="top" class="positionInformation">
+      <el-tab-pane label="Planning">
+        <Planning :setTitle="setTitle"
+                  :setIdConstraint="setIdConstraint"
+                  :idConstraint="idConstraint"
+                  :setDescription="setDescription"
+                  :getTitle="getTitle"
+                  :setIsDisabled="setIsDisabled"
+                  :disabled="isDisabled"
+                  :setStepNumber="setNumber"
+                  :getStepNumber="getNumber"/>
+      </el-tab-pane>
+      <el-tab-pane label="Contraintes">
+        <Contraintes :setIdConstraint="setIdConstraint"
+                     :idConstraint="idConstraint"/>
+      </el-tab-pane>
+      <el-tab-pane label="Modules">
+        <!-- <ContraintesModule/> -->
+      </el-tab-pane>
+      <el-tab-pane label="Historique" :disabled="isDisabled"/>
+    </el-tabs>
   </el-row>
 </template>
 
@@ -37,39 +29,77 @@
 import * as api from '../api'
 import Planning from './Planning'
 import Contraintes from './Contrainte'
-import Modules from './Module'
-// The next two lines are processed by webpack. If you're using the component without webpack compilation,
-// you should just create <link> elements for these as you would normally for CSS files. Both of these
-// CSS files are optional, you can create your own theme if you prefer.
+import ContraintesModule from './ModuleD/ContraintesModule'
+import HeaderPlanning from './HeaderPlanning'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'planningLayout',
-  components: {Planning, Contraintes, Modules},
+  components: {Planning, Contraintes, ContraintesModule, HeaderPlanning},
   data () {
     return {
+      isDisabled: true,
+      idConstraint: '',
       number: 0,
       calendriers: [],
       lieux: [],
       needModules: [],
-      calendrier: Object
+      calendrier: Object,
+      titre: '',
+      description: ''
     }
   },
   created () {
-    this.getCalendrier()
+    this.getCalendrier().then(() =>
+      this.createTitle()
+    )
   },
   methods: {
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+    },
+    getIsDisabled () {
+      return this.isDisabled
+    },
+    setIdConstraint (idConstraint) {
+      this.idConstraint = idConstraint
+    },
+    getIdConstraint () {
+      return this.idConstraint
+    },
     setNumber (int) {
       this.number = int
     },
     getNumber () {
       return this.number
     },
+    setTitle (ti) {
+      this.titre = ti
+    },
+    getTitle () {
+      return this.titre
+    },
+    setDescription (desc) {
+      this.description = desc
+    },
+    getDescription () {
+      return this.description
+    },
     getCalendrier () {
-      api.getCalendriers().then(response => {
+      return api.getCalendriers().then(response => {
         this.calendriers = response.date
       })
+    },
+    createTitle () {
+      if (this.$route.params.idCalendar) {
+        api.getCalendriersById(this.$route.params.idCalendar).then(response => {
+          this.titre = `${response.data.titre}`
+          this.description = `${response.data.description}`
+        })
+      } else {
+        this.titre = `Planning pour ${this.$route.params.id}`
+      }
     }
   }
 }

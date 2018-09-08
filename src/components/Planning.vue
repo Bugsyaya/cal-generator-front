@@ -1,43 +1,41 @@
 <template>
   <el-row id="planning">
-        <el-row>
-          <el-col :span="24">
-            <form action="">
-              <el-row>
-                <el-col :span="12" class="block">
-                        <el-date-picker
-                        aria-required="true"
-                          v-model="periodeFormation"
-                          value-format="yyyy-MM-dd"
-                          type="daterange"
-                          start-placeholder="Début de la formation"
-                          end-placeholder="Fin de la formation"
-                          firstDayOfWeek="2">
-                        </el-date-picker>
-                </el-col>
-                <el-col :span="4">
-                  <el-button type="primary" round plain v-on:click="savePlanning()" :loading="loading" v-if="getStepNumber > 0">
-                    Sauvegarder
-                  </el-button>
-                </el-col>
-              </el-row>
-            </form>
-
-            <router-view
-              :codeFormation="planning.codeFormation"
-              :needModules="needModules"
-              :lieux="lieux"
-              :periodeFormation="periodeFormation"
-              :success="() => this.setStepNumber(1)"
-            ></router-view>
-
+    <el-col :span="24">
+      <form action="">
+          <el-col :span="6" class="block">
+            <el-date-picker
+            aria-required="true"
+              v-model="periodeFormation"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              start-placeholder="Début de la formation"
+              end-placeholder="Fin de la formation"
+              firstDayOfWeek="2">
+            </el-date-picker>
           </el-col>
-        </el-row>
-    </el-row>
+      </form>
+
+        <router-view
+          :idConstraint="idConstraint"
+          :setIdConstraint="setIdConstraint"
+          :codeFormation="planning.codeFormation"
+          :needModules="needModules"
+          :lieux="lieux"
+          :periodeFormation="periodeFormation"
+          :success="() => this.setStepNumber(1)"
+          :setStepNumber="setStepNumber"
+          :getStepNumber="getStepNumber"
+          :setTitle="setTitle"
+          :getTitle="getTitle"
+          :setDescription="setDescription"
+        ></router-view>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
 import Calendar from './Calendar'
+import HeaderPlanning from './HeaderPlanning'
 import * as api from '../api'
 // The next two lines are processed by webpack. If you're using the component without webpack compilation,
 // you should just create <link> elements for these as you would normally for CSS files. Both of these
@@ -49,12 +47,17 @@ export default {
   name: 'planning',
   props: {
     setStepNumber: Function,
-    getStepNumber: Function
+    getStepNumber: Function,
+    setTitle: Function,
+    getTitle: Function,
+    setDescription: Function,
+    idConstraint: String,
+    setIdConstraint: Function
   },
   data () {
     return {
       showDate: new Date(),
-      periodeFormation: ['2018-01-02', '2019-03-11'],
+      periodeFormation: [],
       dateFormation: [],
       loaded: false,
       loading: false,
@@ -69,7 +72,8 @@ export default {
     }
   },
   components: {
-    Calendar
+    Calendar,
+    HeaderPlanning
   },
   created () {
     this.getLieu()

@@ -63,4 +63,8 @@ export default {
   .message {
     font-size: 20px;
   }
+
+  .calendriers {
+    max-height: 70vh;
+  }
 </style>
