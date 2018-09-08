@@ -65,6 +65,6 @@ export default {
   }
 
   .calendriers {
-    max-height: 70vh;
+    max-height: 75vh;
   }
 </style>

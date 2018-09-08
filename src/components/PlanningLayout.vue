@@ -29,14 +29,13 @@
 import * as api from '../api'
 import Planning from './Planning'
 import Contraintes from './Contrainte'
-import ContraintesModule from './ModuleD/ContraintesModule'
 import HeaderPlanning from './HeaderPlanning'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'planningLayout',
-  components: {Planning, Contraintes, ContraintesModule, HeaderPlanning},
+  components: {Planning, Contraintes, HeaderPlanning},
   data () {
     return {
       isDisabled: true,

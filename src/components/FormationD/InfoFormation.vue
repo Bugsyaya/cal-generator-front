@@ -1,12 +1,15 @@
 <template>
-  <div>
+  <div id="infoFormation">
     <br/>
     <div>
       <el-button icon="el-icon-arrow-left" @click="goBack()"></el-button>
       {{ this.$route.params.id }}
     </div>
     <br/>
-    <table class="table">
+
+    <PrerequisModule :codeFormation="this.$route.params.id" :setModulePrerequisPlanning="setModulePrerequisPlanning"/>
+
+    <!-- <table class="table">
       <thead>
         <th>N°</th>
         <th>Noms des modules</th>
@@ -53,7 +56,7 @@
           </select>
         </th>
       </tr>
-    </table>
+    </table> -->
     <el-alert v-if="success"
       :title=tittleAlert
       :type=typeAlert
@@ -70,12 +73,17 @@
 
 <script>
 import axios from 'axios'
+import PrerequisModule from '../PrerequisModule'
 
 export default {
   name: 'InfoFormation',
-
+  components: {
+    PrerequisModule
+  },
   data () {
     return {
+      modulePrerequisPlanning: null,
+      allPrerequis: [],
       tablePrerequis: [],
       prerequisForFormation: [],
       tableFormation: [],
@@ -89,11 +97,17 @@ export default {
   },
 
   created () {
-    this.getPrerequis(this.getPrerequisForFormation)
-    this.getModulesForFormation(this.remplisageTableFormation)
+    // this.getPrerequis(this.getPrerequisForFormation)
+    // this.getModulesForFormation(this.remplisageTableFormation)
   },
 
   methods: {
+    setModulePrerequisPlanning (modulePrerequisPlanning) {
+      this.modulePrerequisPlanning = modulePrerequisPlanning
+    },
+    getModulePrerequisPlanning () {
+      return this.modulePrerequisPlanning
+    },
     // Méthode qui met tous les prérequis dans le tableau tablePrerequis
     async getPrerequis (callback) {
       // console.log("dedbut getPrerequis")
@@ -428,3 +442,9 @@ export default {
 }
 
 </script>
+
+<style>
+#infoFormation {
+  width: 100%;
+}
+</style>

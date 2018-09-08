@@ -23,6 +23,12 @@ export const getFormations = () => fetcher.get('formations')
 
 export const getModulesByCodeFormation = codeFormation => fetcher.get(`formations/${codeFormation}/modules`)
 
+export const getModulePrerequisByFormationAndModule = (codeFormation, idModule) => fetcher.get(`modulesPrerequis/formations/${codeFormation}/modules/${idModule}`)
+
+export const createModulesPrerequis = modulesPrerequis => fetcher.post('modulesPrerequis', modulesPrerequis)
+
+export const updateModulesPrerequis = modulesPrerequis => fetcher.post('modulesPrerequisUpdate', modulesPrerequis)
+
 export const getModulesHorsCodeFormation = codeFormation => fetcher.get(`formations/${codeFormation}/notmodules`)
 
 export const getCoursByModules = idModule => fetcher.get(`modules/${idModule}/cours`)
@@ -42,6 +48,8 @@ export const getCalendriers = () => fetcher.get('calendriers')
 export const getCalendriersById = idCalendrier => fetcher.get(`calendriers/${idCalendrier}`)
 
 export const getModules = () => fetcher.get('modules')
+
+export const getModulesPrerequis = () => fetcher.get('modulesPrerequis')
 
 export const getModulesId = moduleId => fetcher.get(`modules/${moduleId}`)
 
