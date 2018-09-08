@@ -51,6 +51,6 @@ export default new Router({
       path: '/infoFormation/:id',
       name: 'InfoFormation',
       component: InfoFormation
-    },
+    }
   ]
 })

@@ -14,7 +14,6 @@
 
       </template>
 
-
     </el-table-column>
     <el-table-column
       sortable
@@ -39,47 +38,45 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
 
-  export default {
-    name: 'listeFormation',
+export default {
+  name: 'listeFormation',
 
-    data () {
-      return {
-        listeFormation: [],
-        listeModule: [],
-        listeModuleAllFornations: []
-      }
+  data () {
+    return {
+      listeFormation: [],
+      listeModule: [],
+      listeModuleAllFornations: []
+    }
+  },
+
+  created () {
+    this.getListeFormation()
+  },
+
+  methods: {
+    getListeFormation () {
+      console.log('Début getListeFormation')
+      axios
+        .get('http://localhost:9000/formations')
+        .then(response => {
+          this.listeFormation = response.data.map(formation => ({
+            key: formation.codeFormation,
+            label: formation.libelleLong,
+            dureeH: formation.dureeEnHeures,
+            dureeS: formation.dureeEnSemaines
+          }))
+        })
+      console.log('Fin getListeFormation')
+      return this.listeFormation
     },
 
-    created () {
-      this.getListeFormation()
-    },
-
-
-    methods: {
-      getListeFormation () {
-        console.log('Début getListeFormation')
-        axios
-          .get('http://localhost:9000/formations')
-          .then(response => {
-            this.listeFormation = response.data.map(formation => ({
-              key: formation.codeFormation,
-              label: formation.libelleLong,
-              dureeH: formation.dureeEnHeures,
-              dureeS: formation.dureeEnSemaines
-            }))
-          })
-        console.log('Fin getListeFormation')
-        return this.listeFormation
-      },
-
-      getInformations(row) {
-        console.log(row);
-        var codeFormation = row.key.replace(/\s/g, '')
-        this.$router.push('/infoFormation/' + codeFormation);
-      }
+    getInformations (row) {
+      console.log(row)
+      var codeFormation = row.key.replace(/\s/g, '')
+      this.$router.push('/infoFormation/' + codeFormation)
     }
   }
+}
 </script>
-

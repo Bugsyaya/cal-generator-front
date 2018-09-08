@@ -23,37 +23,36 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
 
-  export default {
+export default {
 
-    name: 'ListeModule',
+  name: 'ListeModule',
 
-    data() {
-      return {
-        tableData: [],
-        loaded: false,
-        loading: false
-      }
-    },
+  data () {
+    return {
+      tableData: [],
+      loaded: false,
+      loading: false
+    }
+  },
 
-    created () {
-      this.getListeModule()
-    },
+  created () {
+    this.getListeModule()
+  },
 
-    methods: {
-      getListeModule () {
-        this.loading = true
-        axios
-          .get('http://localhost:9000/modules')
-          .then(response => {
-            this.tableData = response.data
-            console.log('test3', this.tableData)
-          }),
-
-        this.loaded = true,
-        this.loading = false
-      },
+  methods: {
+    getListeModule () {
+      this.loading = true
+      axios
+        .get('http://localhost:9000/modules')
+        .then(response => {
+          this.tableData = response.data
+          console.log('test3', this.tableData)
+        })
+      this.loaded = true
+      this.loading = false
     }
   }
+}
 </script>
