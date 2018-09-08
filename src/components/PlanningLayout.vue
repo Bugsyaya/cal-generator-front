@@ -3,15 +3,24 @@
     <HeaderPlanning :number="number" :title="titre" :description="description"/>
     <el-tabs tab-position="top" class="positionInformation">
       <el-tab-pane label="Planning">
-        <Planning :setTitle="setTitle" :setDescription="setDescription" :getTitle="getTitle" :setStepNumber="setNumber" :getStepNumber="getNumber"/>
+        <Planning :setTitle="setTitle"
+                  :setIdConstraint="setIdConstraint"
+                  :idConstraint="idConstraint"
+                  :setDescription="setDescription"
+                  :getTitle="getTitle"
+                  :setIsDisabled="setIsDisabled"
+                  :disabled="isDisabled"
+                  :setStepNumber="setNumber"
+                  :getStepNumber="getNumber"/>
       </el-tab-pane>
       <el-tab-pane label="Contraintes">
-        <Contraintes/>
+        <Contraintes :setIdConstraint="setIdConstraint"
+                     :idConstraint="idConstraint"/>
       </el-tab-pane>
       <el-tab-pane label="Modules">
-        <Modules/>
+        <!-- <ContraintesModule/> -->
       </el-tab-pane>
-      <el-tab-pane label="Historique">Historique</el-tab-pane>
+      <el-tab-pane label="Historique" :disabled="isDisabled"/>
     </el-tabs>
   </el-row>
 </template>
@@ -20,16 +29,18 @@
 import * as api from '../api'
 import Planning from './Planning'
 import Contraintes from './Contrainte'
-import Modules from './Module'
+import ContraintesModule from './ModuleD/ContraintesModule'
 import HeaderPlanning from './HeaderPlanning'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'planningLayout',
-  components: {Planning, Contraintes, Modules, HeaderPlanning},
+  components: {Planning, Contraintes, ContraintesModule, HeaderPlanning},
   data () {
     return {
+      isDisabled: true,
+      idConstraint: '',
       number: 0,
       calendriers: [],
       lieux: [],
@@ -45,6 +56,18 @@ export default {
     )
   },
   methods: {
+    setIsDisabled (isDisabled) {
+      this.isDisabled = isDisabled
+    },
+    getIsDisabled () {
+      return this.isDisabled
+    },
+    setIdConstraint (idConstraint) {
+      this.idConstraint = idConstraint
+    },
+    getIdConstraint () {
+      return this.idConstraint
+    },
     setNumber (int) {
       this.number = int
     },

@@ -1,6 +1,5 @@
 <template>
   <div id="moreInfoCal">
-
     <div v-if=titleAndDescNeeded>
       <el-col :span="2" :offset="11">
         <el-button class="choose" round align="center" @click="dialogFormVisible = true">Choisir</el-button>
@@ -96,9 +95,6 @@ export default {
         description: this.form.description,
         codeFormation: trim(`${this.$route.params.id}`)
       }
-
-      console.log('calendrier : ', calendrier)
-
       return api.saveCalendar(calendrier).then(response => {
         response.data === 'save' ? this.success() : this.error()
       })

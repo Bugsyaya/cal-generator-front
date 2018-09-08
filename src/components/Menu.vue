@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     log () {
-      console.log('coucou')
     },
     getNumberAlert () {
       api.getAlerteNm('alerte')
@@ -48,10 +47,8 @@ export default {
         })
     },
     handleOpen (key, keyPath) {
-      console.log(key, keyPath)
     },
     handleClose (key, keyPath) {
-      console.log(key, keyPath)
     }
   },
   computed: {

@@ -86,7 +86,10 @@ export default {
     lieux: Array,
     setTitle: Function,
     getTitle: Function,
-    setDescription: Function
+    setDescription: Function,
+    setIdConstraint: Function,
+    isDisabled: Boolean,
+    setIsDisabled: Function
   },
   watch: {
     filterText (val) {
@@ -105,8 +108,9 @@ export default {
       filterText: '',
       filterTextHors: '',
       checkedBox: [],
-      calendrierVerifier: {},
-      isAlerted: false
+      calendrierVerifier: null,
+      isAlerted: false,
+      allNbStagiaireByCours: []
     }
   },
 
@@ -115,6 +119,8 @@ export default {
   },
   created () {
     this.getCalendrier().then(() =>
+      this.getNbStagiaireByCours()
+    ).then(() =>
       this.moduleByFormation()
     ).then(() =>
       this.checkBox()
@@ -123,6 +129,16 @@ export default {
     )
   },
   methods: {
+    getNbStagiaireByCours () {
+      return api.getNbStagiaireByCours().then(response => {
+        this.allNbStagiaireByCours = response.data
+      })
+    },
+    findNbStagiaireByCours (idCours) {
+      if (!idCours) return ''
+      const cours = this.allNbStagiaireByCours.find(nbStagiaireByCours => nbStagiaireByCours.idCours === idCours)
+      return cours ? cours.nbStagiaire : 0
+    },
     verifierCalendar () {
       api.verifierCalendar(this.calendar.idCalendrier).then(response => {
         this.calendrierVerifier = response.data
@@ -135,18 +151,15 @@ export default {
         .filter(item => coursIds.includes(item.coursId))
         .map(item => item.coursId)
       this.$refs.moduleFormation.setChecked(this.checkedBox, true)
-
-      console.log(flatMap(this.dataModuleFormation, 'children'))
     },
     async moduleByFormation () {
-      console.log(this.lieux)
       const { data: modules } = await api.getModulesByCodeFormation(this.calendar.codeFormation)
       this.dataModuleFormation = await Promise.all(modules.map(async m => ({
         id: m.idModule,
         label: m.libelle,
         children: (await api.getCoursByModules(m.idModule)).data.map(cours => ({
           id: cours.idCours,
-          label: `${format(cours.debut, 'DD/MM/YYYY')} - ${format(cours.fin, 'DD/MM/YYYY')} (${toUpper(this.lieux.filter(li => li.codeLieu === cours.codeLieu).map(li => li.libelle)[0])})`,
+          label: `${format(cours.debut, 'DD/MM/YYYY')} - ${format(cours.fin, 'DD/MM/YYYY')} (${toUpper(this.lieux.filter(li => li.codeLieu === cours.codeLieu).map(li => li.libelle)[0])}) : ${this.findNbStagiaireByCours(cours.idCours)}`,
           moduleTitle: m.libelle,
           coursId: cours.idCours
         }))
@@ -159,7 +172,7 @@ export default {
         label: m.libelle,
         children: (await api.getCoursByModules(m.idModule)).data.map(cours => ({
           id: cours.idCours,
-          label: `${format(cours.debut, 'DD/MM/YYYY')} - ${format(cours.fin, 'DD/MM/YYYY')} (${toUpper(this.lieux.filter(li => li.codeLieu === cours.codeLieu).map(li => li.libelle)[0])})`,
+          label: `${format(cours.debut, 'DD/MM/YYYY')} - ${format(cours.fin, 'DD/MM/YYYY')} (${toUpper(this.lieux.filter(li => li.codeLieu === cours.codeLieu).map(li => li.libelle)[0])}) : ${this.findNbStagiaireByCours(cours.idCours)}`,
           moduleTitle: m.libelle,
           coursId: cours.idCours
         }))
@@ -182,6 +195,7 @@ export default {
 
         this.setTitle(this.calendar.titre)
         this.setDescription(this.calendar.description)
+        this.setIdConstraint(this.calendar.constraint && this.calendar.constraint.idConstraint)
       })
     },
     printCalendar () {

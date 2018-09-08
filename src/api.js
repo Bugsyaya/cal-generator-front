@@ -15,6 +15,10 @@ export const apiUrlFront = {
 
 export const getLieux = () => fetcher.get('lieux')
 
+export const getNbStagiaireByCours = () => fetcher.get('stagiaireCours')
+
+export const getConstraints = () => fetcher.get('constraints')
+
 export const getFormations = () => fetcher.get('formations')
 
 export const getModulesByCodeFormation = codeFormation => fetcher.get(`formations/${codeFormation}/modules`)

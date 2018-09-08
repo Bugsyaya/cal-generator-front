@@ -1,12 +1,21 @@
 <template>
   <div>
         <el-table :data="getPeriods()" class="calendarG" v-if="calendrier.cours" max-height="750" :row-class-name="tableRowClassName">
+          <el-table-column type="expand" v-if="calendrierVerifier">
+            <template slot-scope="props">
+              <ul>
+                <li v-for="error in getErrors(props.row.idCours)" :key="error.name">
+                  {{error.name}}
+                </li>
+              </ul>
+            </template>
+          </el-table-column>
           <el-table-column label="Date" align="center" width="100">
             <el-table-column label="Début" align="center" prop="debut" width="100" :formatter="formatDate"/>
             <el-table-column label="Fin" align="center" prop="fin" width="100" :formatter="formatDate"/>
           </el-table-column>
           <el-table-column label="Lieu" align="center" prop="codeLieu" width="150" :formatter="formatLieu"/>
-          <el-table-column label="Classe" align="center" prop="idCours" width="180"/>
+          <el-table-column label="Nombre de stagiaires" align="center" prop="idCours" width="180" :formatter="findNbStagiaireByCours"/>
           <el-table-column label="Programme" prop="idModule" :formatter="formatLibelle"/>
         </el-table>
   </div>
@@ -19,6 +28,7 @@ import addDays from 'date-fns/add_days'
 import isSameDay from 'date-fns/is_same_day'
 import subDays from 'date-fns/sub_days'
 import sortBy from 'lodash/sortBy'
+import * as api from '../api'
 
 window.isSameDay = isSameDay
 
@@ -43,7 +53,25 @@ export default {
     calendrier: { type: Object },
     calendrierVerifier: { type: Object }
   },
+  data () {
+    return {
+      allNbStagiaireByCours: []
+    }
+  },
+  created () {
+    this.getNbStagiaireByCours()
+  },
   methods: {
+    getNbStagiaireByCours () {
+      api.getNbStagiaireByCours().then(response => {
+        this.allNbStagiaireByCours = response.data
+      })
+    },
+    findNbStagiaireByCours (row, col, idCours) {
+      if (!idCours) return ''
+      const cours = this.allNbStagiaireByCours.find(nbStagiaireByCours => nbStagiaireByCours.idCours === idCours)
+      return cours ? cours.nbStagiaire : 0
+    },
     formatDate (row, col, date) {
       return format(date, 'DD/MM/YYYY')
     },
@@ -86,10 +114,17 @@ export default {
       return periodes
     },
     tableRowClassName ({row, rowIndex}) {
-      console.log('calenV :', this.calendrierVerifier)
-      if (rowIndex === 2) return 'warning-row'
-      else if (rowIndex === 3) return 'success-row'
+      if (this.calendrierVerifier) {
+        const cours = this.calendrierVerifier.cours.find(c => c.idCours === row.idCours)
+        if (!cours) return ''
+        if (cours.constraints.length) return 'warning-row'
+      }
       return ''
+    },
+    getErrors (idCours) {
+      if (!idCours || !this.calendrierVerifier) return []
+      const cours = this.calendrierVerifier.cours.find(c => c.idCours === idCours)
+      return cours ? cours.constraints : []
     }
   }
 }
@@ -107,6 +142,15 @@ export default {
 
 .el-table .warning-row {
   background: oldlace;
+}
+
+.el-table__expanded-cell, .el-table__expanded-cell ul {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.el-table__expanded-cell li {
+  margin: 0.5em 2em;
 }
 
 .el-table .success-row {

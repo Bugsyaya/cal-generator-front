@@ -20,7 +20,6 @@
       </el-col>
     </el-col>
 
-
     <el-col :span="24">
       <div v-if="!calendriers.length && loaded && !loading" class="message">
         Aucune solution possible pour les paramètres donnés.
@@ -54,7 +53,10 @@ export default {
     success: Function,
     setTitle: Function,
     getTitle: Function,
-    setDescription: Function
+    setDescription: Function,
+    idConstraint: String,
+    isDisabled: Boolean,
+    setIsDisabled: Function
   },
   data: () => ({
     calendriers: [],
@@ -70,7 +72,7 @@ export default {
       api.generateCalendar({
         codeFormation: this.codeFormation,
         periodOfTraining: { start, end },
-        idConstraint: '67b7ef92-af36-41cf-902b-5671a7eb53f5',
+        idConstraint: this.idConstraint,
         idModulePrerequisPlanning: 'marinaTest1',
         numberOfCalendarToFound: this.numberOfCalendarToFound
       })

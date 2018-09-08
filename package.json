@@ -30,6 +30,7 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-simple-calendar": "^3.0.2",
+    "vue-smooth-dnd": "^0.2.5",
     "vuetify": "^1.1.14"
   },
   "devDependencies": {

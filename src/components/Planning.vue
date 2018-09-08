@@ -16,6 +16,8 @@
       </form>
 
         <router-view
+          :idConstraint="idConstraint"
+          :setIdConstraint="setIdConstraint"
           :codeFormation="planning.codeFormation"
           :needModules="needModules"
           :lieux="lieux"
@@ -48,7 +50,9 @@ export default {
     getStepNumber: Function,
     setTitle: Function,
     getTitle: Function,
-    setDescription: Function
+    setDescription: Function,
+    idConstraint: String,
+    setIdConstraint: Function
   },
   data () {
     return {
