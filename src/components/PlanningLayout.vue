@@ -6,6 +6,8 @@
         <Planning :setTitle="setTitle"
                   :setIdConstraint="setIdConstraint"
                   :idConstraint="idConstraint"
+                  :idModulePrerequisPlanning="idModulePrerequisPlanning"
+                  :setIdModulePrerequisPlanning="setIdModulePrerequisPlanning"
                   :setDescription="setDescription"
                   :getTitle="getTitle"
                   :setIsDisabled="setIsDisabled"
@@ -18,7 +20,17 @@
                      :idConstraint="idConstraint"/>
       </el-tab-pane>
       <el-tab-pane label="Modules">
-        <!-- <ContraintesModule/> -->
+        <el-col :span="18">
+          <PrerequisModule
+            class="prereq"
+            :codeFormation="$route.params.id"
+            :idModulePrerequisPlanning="idModulePrerequisPlanning"
+            disabled
+          />
+        </el-col>
+        <el-col :span="6">
+          <ListePrerequis :setIdModulePrerequisPlanning="setIdModulePrerequisPlanning"/>
+        </el-col>
       </el-tab-pane>
       <el-tab-pane label="Historique" :disabled="isDisabled"/>
     </el-tabs>
@@ -29,17 +41,20 @@
 import * as api from '../api'
 import Planning from './Planning'
 import Contraintes from './Contrainte'
+import PrerequisModule from './PrerequisModule'
+import ListePrerequis from './ListePrerequis'
 import HeaderPlanning from './HeaderPlanning'
 require('vue-simple-calendar/dist/static/css/default.css')
 require('vue-simple-calendar/dist/static/css/holidays-us.css')
 
 export default {
   name: 'planningLayout',
-  components: {Planning, Contraintes, HeaderPlanning},
+  components: {Planning, Contraintes, HeaderPlanning, PrerequisModule, ListePrerequis},
   data () {
     return {
       isDisabled: true,
       idConstraint: '',
+      idModulePrerequisPlanning: '',
       number: 0,
       calendriers: [],
       lieux: [],
@@ -60,6 +75,12 @@ export default {
     },
     getIsDisabled () {
       return this.isDisabled
+    },
+    setIdModulePrerequisPlanning (idModulePrerequisPlanning) {
+      this.idModulePrerequisPlanning = idModulePrerequisPlanning
+    },
+    getIdModulePrerequisPlanning () {
+      return this.idModulePrerequisPlanning
     },
     setIdConstraint (idConstraint) {
       this.idConstraint = idConstraint
@@ -163,6 +184,10 @@ label {
 .positionInformation{
   position: relative;
   top: 2em;
+}
+
+.prereq {
+  max-height: 95vh;
 }
 
 #titre{

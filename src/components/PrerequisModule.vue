@@ -1,24 +1,36 @@
 <template>
-  <div id="modulePrerequis" v-if="modulesByFormation && allPrerequis">
-    <el-table :data="modulesByFormation" class="prereq" max-height="900" :default-sort="{prop: 'idModule', order: 'descending'}">
-      <el-table-column label="Noms des modules" align="center" prop="idModule" width="400" :formatter="formatNomModule" sortable fixed/>
-      <el-table-column label="Modules requis" prop="idCours" width="600">
+  <div id="modulePrerequis" v-if="modulesByFormation && prerequis">
+    <el-table :data="modulesByFormation" class="prereq" max-height="900" :default-sort="{prop: 'libelle', order: 'descending'}">
+      <el-table-column label="Noms des modules" align="right" prop="idModule" :formatter="formatNomModule" sortable fixed/>
+      <el-table-column label="Modules requis" align="center" prop="idCours">
         <template slot-scope="scope">
-          <el-select :value="getPrerequisOblById(scope.row.idModule)" filterable @change="setPrerequisObl(scope.row.idModule, $event)" multiple placeholder="Module obligatoire">
-            <el-col :span="24">
-              <el-option
-                v-for="mF in allModuleWithoutObl(scope.row.idModule)"
-                :key="mF.idModule"
-                :label="mF.libelle"
-                :value="mF.idModule">
-              </el-option>
-            </el-col>
+          <el-select
+            :value="getPrerequisOblById(scope.row.idModule)"
+            @change="setPrerequisObl(scope.row.idModule, $event)"
+            filterable
+            multiple
+            placeholder="Module obligatoire"
+            :disabled="disabled"
+          >
+            <el-option
+              v-for="mF in allModuleWithoutObl(scope.row.idModule)"
+              :key="mF.idModule"
+              :label="mF.libelle"
+              :value="mF.idModule">
+            </el-option>
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="Modules optionnels" prop="idModule" width="600">
+      <el-table-column label="Modules optionnels" align="center" prop="idModule">
         <template slot-scope="scope">
-          <el-select :value="getPrerequisOptById(scope.row.idModule)" filterable @change="setPrerequisOpt(scope.row.idModule, $event)" multiple placeholder="Module optionnel">
+          <el-select
+            :value="getPrerequisOptById(scope.row.idModule)"
+            @change="setPrerequisOpt(scope.row.idModule, $event)"
+            filterable
+            multiple
+            placeholder="Module optionnel"
+            :disabled="disabled"
+          >
               <el-option
                 v-for="mF in allModuleWithoutOpt(scope.row.idModule)"
                 :key="mF.idModule"
@@ -39,49 +51,63 @@ import reject from 'lodash/reject'
 export default {
   name: 'modulePrerequis',
   props: {
-    codeFormation: String
+    codeFormation: String,
+    setModulePrerequis: {type: Function, default: () => {}},
+    idModulePrerequisPlanning: String,
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
       modulesByFormation: null,
-      allPrerequis: null,
       test1: [],
-      test2: []
+      test2: [],
+      prerequisPlanning: null,
+      prerequis: null
     }
   },
   created () {
-    this.getModulesByFormation().then(() =>
-      this.getAllPrerequis()
-    )
+    this.getModulesByFormation()
+  },
+  watch: {
+    idModulePrerequisPlanning (id) {
+      this.getPrerequisPlanning(id)
+    }
   },
   methods: {
-    getModulesByFormation () {
-      return api.getModulesByCodeFormation(this.codeFormation).then(response => {
-        this.modulesByFormation = response.data
+    async getPrerequisPlanning (id) {
+      const { data: prerequisPlanning } = await api.getModulesPrerequisPlanningById(id)
+      this.prerequisPlanning = prerequisPlanning
+      const { data: allPrerequis } = await api.getModulesPrerequis()
+      const prerequis = allPrerequis.filter(p => this.prerequisPlanning.idModulePrerequis.includes(p.idModulePrerequis))
+      this.prerequis = this.modulesByFormation.map(mod => {
+        const prereq = prerequis.find(m => m.idModule === mod.idModule)
+        return prereq || {idModule: mod.idModule, idModuleObligatoire: [], idModuleOptionnel: [], codeFormation: this.codeFormation}
       })
+      this.setModulePrerequis(this.modulesByFormation)
+      this.disabled = true
+    },
+    async getModulesByFormation () {
+      const response = await api.getModulesByCodeFormation(this.codeFormation)
+      this.modulesByFormation = response.data
+      this.prerequis = this.modulesByFormation.map(mod => {
+        return {idModule: mod.idModule, idModuleObligatoire: [], idModuleOptionnel: [], codeFormation: this.codeFormation}
+      })
+      this.setModulePrerequis(this.prerequis)
     },
     setPrerequisObl (idModule, $event) {
-      this.allPrerequis.find(p => p.idModule === idModule).idModuleObligatoire = $event
+      this.prerequis.find(p => p.idModule === idModule).idModuleObligatoire = $event
     },
     setPrerequisOpt (idModule, $event) {
-      this.allPrerequis.find(p => p.idModule === idModule).idModuleOpionnel = $event
-    },
-    getModulePrerequisByFormationAndModule (idModule) {
-      api.getModulePrerequisByFormationAndModule(this.codeFormation, idModule)
-    },
-    getAllPrerequis () {
-      return api.getModulesPrerequis().then(response => {
-        this.allPrerequis = this.modulesByFormation.map(mod => {
-          const prereq = response.data.find(m => m.idModule === mod.idModule)
-          return prereq || {idModule: mod.idModule, idModuleObligatoire: [], idModuleOpionnel: [], codeFormation: this.codeFormation}
-        })
-      })
+      this.prerequis.find(p => p.idModule === idModule).idModuleOptionnel = $event
     },
     getPrerequisOblById (idModule) {
-      return this.allPrerequis.find(p => p.idModule === idModule).idModuleObligatoire
+      return this.prerequis.find(p => p.idModule === idModule).idModuleObligatoire
     },
     getPrerequisOptById (idModule) {
-      return this.allPrerequis.find(p => p.idModule === idModule).idModuleOpionnel
+      return this.prerequis.find(p => p.idModule === idModule).idModuleOptionnel
     },
     getModulesLibelle () {
       if (!this.modulesByFormation.length) return []
@@ -101,11 +127,11 @@ export default {
       return modul ? modul.libelle : 'modul inconnu'
     },
     allModuleWithoutOpt (id) {
-      const obli = this.allPrerequis.find(p => p.idModule === id).idModuleObligatoire
+      const obli = this.prerequis.find(p => p.idModule === id).idModuleObligatoire
       return reject(this.modulesByFormation, (mod) => mod.idModule === id || obli.includes(mod.idModule))
     },
     allModuleWithoutObl (id) {
-      const opt = this.allPrerequis.find(p => p.idModule === id).idModuleOpionnel
+      const opt = this.prerequis.find(p => p.idModule === id).idModuleOptionnel
       return reject(this.modulesByFormation, (mod) => mod.idModule === id || opt.includes(mod.idModule))
     }
   }
@@ -113,7 +139,7 @@ export default {
 </script>
 
 <style>
-.el-input {
-  width: 40em;
+.el-table__row .cell {
+  padding: 0 !important;
 }
 </style>

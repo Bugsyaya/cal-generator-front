@@ -1,23 +1,23 @@
 <template>
   <div>
-        <el-table :data="getPeriods()" class="calendarG" v-if="calendrier.cours" max-height="750" :row-class-name="tableRowClassName">
-          <el-table-column type="expand" v-if="calendrierVerifier">
-            <template slot-scope="props">
-              <ul>
-                <li v-for="error in getErrors(props.row.idCours)" :key="error.name">
-                  {{error.name}}
-                </li>
-              </ul>
-            </template>
-          </el-table-column>
-          <el-table-column label="Date" align="center" width="100">
-            <el-table-column label="Début" align="center" prop="debut" width="100" :formatter="formatDate"/>
-            <el-table-column label="Fin" align="center" prop="fin" width="100" :formatter="formatDate"/>
-          </el-table-column>
-          <el-table-column label="Lieu" align="center" prop="codeLieu" width="150" :formatter="formatLieu"/>
-          <el-table-column label="Nombre de stagiaires" align="center" prop="idCours" width="180" :formatter="findNbStagiaireByCours"/>
-          <el-table-column label="Programme" prop="idModule" :formatter="formatLibelle"/>
-        </el-table>
+    <el-table :data="getPeriods()" class="calendarG" v-if="calendrier.cours" max-height="750" :row-class-name="tableRowClassName">
+      <el-table-column type="expand" v-if="calendrierVerifier">
+        <template slot-scope="props">
+          <ul>
+            <li v-for="error in getErrors(props.row.idCours)" :key="error.name">
+              {{error.name}}
+            </li>
+          </ul>
+        </template>
+      </el-table-column>
+      <el-table-column label="Date" align="center" width="100">
+        <el-table-column label="Début" align="center" prop="debut" width="100" :formatter="formatDate"/>
+        <el-table-column label="Fin" align="center" prop="fin" width="100" :formatter="formatDate"/>
+      </el-table-column>
+      <el-table-column label="Lieu" align="center" prop="codeLieu" width="150" :formatter="formatLieu"/>
+      <el-table-column label="Nombre de stagiaires" align="center" prop="idCours" width="180" :formatter="findNbStagiaireByCours"/>
+      <el-table-column label="Programme" prop="idModule" :formatter="formatLibelle"/>
+    </el-table>
   </div>
 </template>
 

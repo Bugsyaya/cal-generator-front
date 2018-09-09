@@ -2,7 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import PlanningLayout from '@/components/PlanningLayout'
-import Planning from '@/components/Planning'
+import AllPlanning from '@/components/AllPlanning'
+import GeneratePlanning from '@/components/GeneratePlanning'
+import DetailsPlanning from '@/components/DetailsPlanning'
 import Formation from '@/components/Formation'
 import ListeModule from '@/components/ModuleD/ListeModule'
 import ListeFormation from '@/components/FormationD/ListeFormation'
@@ -13,20 +15,24 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'HelloWorld',
-    //   component: HelloWorld
-    // },
+    {
+      path: '/planning',
+      name: 'AllPlannings',
+      component: AllPlanning
+    },
     {
       path: '/planning/:id',
-      name: 'PlanningLayout',
       component: PlanningLayout,
       children: [
         {
-          path: 'planning',
-          name: 'Planning',
-          component: Planning
+          path: '',
+          name: 'GeneratePlanning',
+          component: GeneratePlanning
+        },
+        {
+          path: 'details/:idCalendar',
+          name: 'DetailsPlanning',
+          component: DetailsPlanning
         }
       ]
     },

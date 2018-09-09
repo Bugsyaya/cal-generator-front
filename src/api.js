@@ -23,9 +23,17 @@ export const getFormations = () => fetcher.get('formations')
 
 export const getModulesByCodeFormation = codeFormation => fetcher.get(`formations/${codeFormation}/modules`)
 
+export const incrementCours = idCours => fetcher.get(`increment/${idCours}`)
+
+export const dincrementCours = idCours => fetcher.get(`dincrement/${idCours}`)
+
 export const getModulePrerequisByFormationAndModule = (codeFormation, idModule) => fetcher.get(`modulesPrerequis/formations/${codeFormation}/modules/${idModule}`)
 
 export const createModulesPrerequis = modulesPrerequis => fetcher.post('modulesPrerequis', modulesPrerequis)
+
+export const createModulesPrerequisPlanning = modulesPrerequisPlanning => fetcher.post('modulesPrerequisPlanning', modulesPrerequisPlanning)
+
+export const getModulesPrerequisPlanning = () => fetcher.get('modulesPrerequisPlanning')
 
 export const updateModulesPrerequis = modulesPrerequis => fetcher.post('modulesPrerequisUpdate', modulesPrerequis)
 
@@ -34,6 +42,8 @@ export const getModulesHorsCodeFormation = codeFormation => fetcher.get(`formati
 export const getCoursByModules = idModule => fetcher.get(`modules/${idModule}/cours`)
 
 export const generateCalendar = params => fetcher.post('generationCal', params)
+
+export const updateCalendar = params => fetcher.post('updateCal', params)
 
 export const verifierCalendar = idCalendar => fetcher.get(`verificationCal/${idCalendar}`)
 
@@ -56,6 +66,8 @@ export const getModulesId = moduleId => fetcher.get(`modules/${moduleId}`)
 export const getAlerteNm = alerte => fetcher.get(`status/${alerte}`)
 
 export const synchronise = () => fetcher.get('synchronise')
+
+export const getModulesPrerequisPlanningById = id => fetcher.get(`modulesPrerequisPlanning/${id}`)
 
 export const loadConfig = async () => {
   const { data } = await axios.get('/static/config.json')

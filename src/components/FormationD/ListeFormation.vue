@@ -2,8 +2,7 @@
   <el-table
     :data="listeFormation"
     style="width: 100%"
-    height=auto
-  >
+    height=auto>
     <el-table-column
       type="expand"
     >
@@ -11,16 +10,13 @@
         <p> Formation : {{ props.row.label }}</p>
         <p> Durée : {{ props.row.dureeS }} semaine(s)</p>
         <p> Volume horaire : {{ props.row.dureeH }} heure(s)</p>
-
       </template>
-
     </el-table-column>
     <el-table-column
       sortable
       order
       prop="key"
       label="Liste des formations"
-
     >
     </el-table-column>
     <el-table-column
@@ -28,7 +24,12 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="getInformations(scope.row)">Prérequis</el-button>
+          @click="getInformations(scope.row)">Prérequis
+          </el-button>
+        <el-button
+          size="mini"
+          @click="generate(scope.row)">Générer
+          </el-button>
       </template>
     </el-table-column>
     <el-table-column>
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import * as api from '../../api'
 
 export default {
   name: 'listeFormation',
@@ -57,23 +58,22 @@ export default {
 
   methods: {
     getListeFormation () {
-      console.log('Début getListeFormation')
-      axios
-        .get('http://localhost:9000/formations')
-        .then(response => {
-          this.listeFormation = response.data.map(formation => ({
-            key: formation.codeFormation,
-            label: formation.libelleLong,
-            dureeH: formation.dureeEnHeures,
-            dureeS: formation.dureeEnSemaines
-          }))
-        })
-      console.log('Fin getListeFormation')
+      api.getFormations().then(response => {
+        this.listeFormation = response.data.map(formation => ({
+          key: formation.codeFormation,
+          label: formation.libelleLong,
+          dureeH: formation.dureeEnHeures,
+          dureeS: formation.dureeEnSemaines
+        }))
+      })
       return this.listeFormation
+    },
+    generate (row) {
+      var codeFormation = row.key.replace(/\s/g, '')
+      this.$router.push('/planning/' + codeFormation)
     },
 
     getInformations (row) {
-      console.log(row)
       var codeFormation = row.key.replace(/\s/g, '')
       this.$router.push('/infoFormation/' + codeFormation)
     }

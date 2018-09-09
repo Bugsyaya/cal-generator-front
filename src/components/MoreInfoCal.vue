@@ -2,9 +2,9 @@
   <div id="moreInfoCal">
     <div v-if=titleAndDescNeeded>
       <el-col :span="2" :offset="11">
-        <el-button class="choose" round align="center" @click="dialogFormVisible = true">Choisir</el-button>
+        <el-button class="choose" round align="center" @click="dialogFormVisible = true">{{buttonName}}</el-button>
       </el-col>
-      <el-dialog title="Information du planning" :visible.sync="dialogFormVisible">
+      <el-dialog :title="titrePopUp" :visible.sync="dialogFormVisible">
           <el-form :model="form" :rules="rules" ref="form" >
             <el-form-item label="Titre" prop="titre" :label-width="formLabelWidth">
               <el-input v-model="form.titre" auto-complete="off"></el-input>
@@ -36,9 +36,17 @@ import trim from 'lodash/trim'
 export default {
   name: 'moreInfoCal',
   props: {
+    buttonName: {type: String, default: 'Choisir'},
     calendrier: { type: Object },
+    needRedirection: Boolean,
     titleAndDescNeeded: true,
-    setTitle: Function
+    setTitle: Function,
+    titrePopUp: String,
+    messageSuccess: String,
+    messageError: String,
+    saveFunction: Function,
+    setTitre: Function,
+    setDescription: Function
   },
   data () {
     return {
@@ -65,9 +73,18 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.dialogFormVisible = false
-          this.choosePlanning().then(() =>
-            this.$router.push(`/planning/${this.calendrier.codeFormation}/details/${this.calendrier.idCalendrier}`)
-          )
+          if (this.needRedirection) {
+            this.choosePlanning().then(() =>
+              this.$router.push(`/planning/${this.calendrier.codeFormation}/details/${this.calendrier.idCalendrier}`)
+            )
+          } else {
+            this.setTitre(this.form.titre)
+            this.setDescription(this.form.description)
+            this.dialogFormVisible = false
+            this.saveFunction().then(response => {
+              response.data ? this.success() : this.error()
+            })
+          }
         } else {
           return false
         }
@@ -76,14 +93,14 @@ export default {
     success () {
       this.$notify({
         title: 'Sauvegarder',
-        message: 'Le calendrier a correctement été enregistré',
+        message: this.messageSuccess,
         type: 'success'
       })
     },
     error () {
       this.$notify({
         title: 'Erreur',
-        message: 'Une erreur s\'est produite',
+        message: this.messageError,
         type: 'error'
       })
     },

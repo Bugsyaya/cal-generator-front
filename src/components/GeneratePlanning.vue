@@ -29,7 +29,17 @@
           <div v-for="calendar in calendriers" :key="calendar.idCalendrier">
               <el-col :span="12">
                 <Calendar :calendrier="calendar" class="calendarGenerate" :cours="calendar.cours" :lieux="lieux" :modules="needModules" />
-                <MoreInfoCal :setTitle="setTitle" :setDescription="setDescription" id="moreInfoCal" titleAndDescNeeded="true" class="calendarGenerate" :calendrier="calendar" />
+                <MoreInfoCal id="moreInfoCal"
+                            class="calendarGenerate"
+                            buttonName="Sauvegarder"
+                            messageSuccess="Le calendrier a bien été sauvegardé"
+                            messageError="Une erreur s'est produite"
+                            :setTitre="setTitre"
+                            :setDescription="setDescription"
+                            titrePopUp="Sauvegarde du calendrier"
+                            :needRedirection=true
+                            titleAndDescNeeded=true
+                            :calendrier="calendar" />
               </el-col>
           </div>
         </el-col>
@@ -56,7 +66,9 @@ export default {
     setDescription: Function,
     idConstraint: String,
     isDisabled: Boolean,
-    setIsDisabled: Function
+    setIsDisabled: Function,
+    setIdModulePrerequisPlanning: Function,
+    idModulePrerequisPlanning: String
   },
   data: () => ({
     calendriers: [],
@@ -73,7 +85,7 @@ export default {
         codeFormation: this.codeFormation,
         periodOfTraining: { start, end },
         idConstraint: this.idConstraint,
-        idModulePrerequisPlanning: 'marinaTest1',
+        idModulePrerequisPlanning: this.idModulePrerequisPlanning,
         numberOfCalendarToFound: this.numberOfCalendarToFound
       })
         .then(response => {

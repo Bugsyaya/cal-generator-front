@@ -17,6 +17,8 @@
 
         <router-view
           :idConstraint="idConstraint"
+          :idModulePrerequisPlanning="idModulePrerequisPlanning"
+          :setIdModulePrerequisPlanning="setIdModulePrerequisPlanning"
           :setIdConstraint="setIdConstraint"
           :codeFormation="planning.codeFormation"
           :needModules="needModules"
@@ -52,7 +54,9 @@ export default {
     getTitle: Function,
     setDescription: Function,
     idConstraint: String,
-    setIdConstraint: Function
+    setIdConstraint: Function,
+    idModulePrerequisPlanning: String,
+    setIdModulePrerequisPlanning: {type: Function, default: () => {}}
   },
   data () {
     return {
@@ -89,8 +93,7 @@ export default {
       api.generateCalendar({
         ...this.planning,
         periodOfTraining: { start, end },
-        idConstraint: '67b7ef92-af36-41cf-902b-5671a7eb53f5',
-        idModulePrerequisPlanning: 'marinaTest1',
+        idConstraint: this.idConstraint,
         numberOfCalendarToFound: 5
       })
         .then(response => {

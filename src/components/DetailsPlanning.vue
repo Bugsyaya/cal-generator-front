@@ -45,6 +45,7 @@
                 show-checkbox
                 :filter-node-method="filterNode"
                 :default-checked-keys="checkedBox"
+                @check-change="handleModuleFormationChange"
                 node-key="coursId"
                 ref="moduleFormation"
               />
@@ -76,6 +77,7 @@ import format from 'date-fns/format'
 import includes from 'lodash/includes'
 import toUpper from 'lodash/toUpper'
 import flatMap from 'lodash/flatMap'
+import findIndex from 'lodash/findIndex'
 
 export default {
   name: 'detailsPlannings',
@@ -88,6 +90,8 @@ export default {
     getTitle: Function,
     setDescription: Function,
     setIdConstraint: Function,
+    idModulePrerequisPlanning: String,
+    setIdModulePrerequisPlanning: {type: Function, default: () => {}},
     isDisabled: Boolean,
     setIsDisabled: Function
   },
@@ -104,13 +108,16 @@ export default {
       calendar: {},
       tabPosition: 'left',
       dataModuleFormation: [],
+      modulesFormation: [],
+      modulesHorsFormation: [],
       dataModuleHorsFormation: [],
       filterText: '',
       filterTextHors: '',
       checkedBox: [],
       calendrierVerifier: null,
       isAlerted: false,
-      allNbStagiaireByCours: []
+      allNbStagiaireByCours: [],
+      coursByModule: {}
     }
   },
 
@@ -140,9 +147,11 @@ export default {
       return cours ? cours.nbStagiaire : 0
     },
     verifierCalendar () {
-      api.verifierCalendar(this.calendar.idCalendrier).then(response => {
-        this.calendrierVerifier = response.data
-        this.setStepNumber(3)
+      api.updateCalendar(this.calendar).then(response => {
+        api.verifierCalendar(this.calendar.idCalendrier).then(response => {
+          this.calendrierVerifier = response.data
+          this.setStepNumber(3)
+        })
       })
     },
     checkBox () {
@@ -154,16 +163,22 @@ export default {
     },
     async moduleByFormation () {
       const { data: modules } = await api.getModulesByCodeFormation(this.calendar.codeFormation)
-      this.dataModuleFormation = await Promise.all(modules.map(async m => ({
+      this.modulesFormation = modules
+      await Promise.all(this.modulesFormation.map(async m => {
+        const { data } = await api.getCoursByModules(m.idModule)
+        this.coursByModule[m.idModule] = data
+      }))
+      this.dataModuleFormation = modules.map(m => ({
         id: m.idModule,
         label: m.libelle,
-        children: (await api.getCoursByModules(m.idModule)).data.map(cours => ({
+        children: this.coursByModule[m.idModule].map(cours => ({
           id: cours.idCours,
           label: `${format(cours.debut, 'DD/MM/YYYY')} - ${format(cours.fin, 'DD/MM/YYYY')} (${toUpper(this.lieux.filter(li => li.codeLieu === cours.codeLieu).map(li => li.libelle)[0])}) : ${this.findNbStagiaireByCours(cours.idCours)}`,
           moduleTitle: m.libelle,
-          coursId: cours.idCours
+          coursId: cours.idCours,
+          idModule: m.idModule
         }))
-      })))
+      }))
     },
     async moduleHorsFormation () {
       const { data: modules } = await api.getModulesHorsCodeFormation(this.calendar.codeFormation)
@@ -174,7 +189,8 @@ export default {
           id: cours.idCours,
           label: `${format(cours.debut, 'DD/MM/YYYY')} - ${format(cours.fin, 'DD/MM/YYYY')} (${toUpper(this.lieux.filter(li => li.codeLieu === cours.codeLieu).map(li => li.libelle)[0])}) : ${this.findNbStagiaireByCours(cours.idCours)}`,
           moduleTitle: m.libelle,
-          coursId: cours.idCours
+          coursId: cours.idCours,
+          idModule: m.idModule
         }))
       })))
     },
@@ -192,6 +208,7 @@ export default {
         else this.setStepNumber(0)
 
         if (this.calendar.status === 'alerte') this.isAlerted = true
+        this.setIdModulePrerequisPlanning(this.calendar.idModulePrerequisPlanning)
 
         this.setTitle(this.calendar.titre)
         this.setDescription(this.calendar.description)
@@ -210,6 +227,22 @@ export default {
         })
       doc.save('two-by-four.pdf')
       this.setStepNumber(4)
+    },
+    handleModuleFormationChange ({coursId, idModule}, checked) {
+      if (!this.calendar || !this.dataModuleFormation || !coursId) return
+      if (checked) {
+        const cours = this.coursByModule[idModule].find(c => c.idCours === coursId)
+        api.incrementCours(coursId).then(response => {
+          console.log(response.data)
+          this.calendar.cours.push({...cours, constraints: []})
+        })
+      } else {
+        const coursIndex = findIndex(this.calendar.cours, { idCours: coursId })
+        api.dincrementCours(coursId).then(response => {
+          console.log(response.data)
+          this.calendar.cours.splice(coursIndex, 1)
+        })
+      }
     }
   }
 }
