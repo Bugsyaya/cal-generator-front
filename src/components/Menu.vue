@@ -25,7 +25,6 @@ export default {
   name: 'monMenu',
   data: () => ({
     items: [
-      {nom: 'FormationOld', url: '/formation', icon: 'el-icon-tickets'},
       {nom: 'Planning', url: '/planning', icon: 'el-icon-date'},
       {nom: 'Formations', url: '/listeFormation', icon: 'el-icon-tickets'},
       {nom: 'ListeModule', url: '/listeModule', icon: 'el-icon-document'},
