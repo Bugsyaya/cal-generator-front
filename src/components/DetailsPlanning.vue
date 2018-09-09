@@ -236,17 +236,9 @@ export default {
       })
     },
     printCalendar () {
-      var doc = new JsPDF()
-      var source = window.document.getElementById('detailsPlannings')
-      doc.fromHTML(
-        source,
-        15,
-        15,
-        {
-          'width': 180
-        })
-      doc.save('two-by-four.pdf')
-      this.setStepNumber(4)
+      const idCal = this.$route.params.idCalendar
+      console.log(idCal)
+      window.location.href = window.origin + '/pdf/' + idCal
     },
     handleModuleFormationChange ({coursId, idModule}, checked) {
       if (!this.calendar || !this.dataModuleFormation || !coursId) return
