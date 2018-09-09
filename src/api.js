@@ -71,6 +71,8 @@ export const synchronise = () => fetcher.get('synchronise')
 
 export const getModulesPrerequisPlanningById = id => fetcher.get(`modulesPrerequisPlanning/${id}`)
 
+export const getFormationById = id => fetcher.get(`formations/${id}`)
+
 export const loadConfig = async () => {
   const { data } = await axios.get('/static/config.json')
   if (data && data.backend) API_URL = data.backend
