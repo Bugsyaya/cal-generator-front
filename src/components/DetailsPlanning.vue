@@ -31,7 +31,7 @@
             show-icon>
           </el-alert>
         </div>
-        <Calendar :calendrier="calendar" :lieux="lieux" :modules="needModules" :calendrierVerifier="calendrierVerifier"/>
+        <Calendar :calendrier="calendar" :lieux="lieux" :modules="needModules" :calendrierVerifier="calendrierVerifier" :horsModules="horsModules"/>
       </el-col>
       <el-col :span="11" class="dCalendar">
         <el-tabs :tab-position="tabPosition">
@@ -60,6 +60,7 @@
               show-checkbox
               :filter-node-method="filterNode"
               :default-checked-keys="checkedBox"
+              @check-change="handleModuleHorsFormationChange"
               node-key="coursId"
               ref="moduleHorsFormation"
             />
@@ -72,7 +73,6 @@
 <script>
 import Calendar from './Calendar'
 import * as api from '../api'
-import * as JsPDF from 'jspdf'
 import format from 'date-fns/format'
 import includes from 'lodash/includes'
 import toUpper from 'lodash/toUpper'
@@ -111,6 +111,7 @@ export default {
       modulesFormation: [],
       modulesHorsFormation: [],
       dataModuleHorsFormation: [],
+      horsModules: [],
       filterText: '',
       filterTextHors: '',
       checkedBox: [],
@@ -139,7 +140,6 @@ export default {
     newCalendar () {
       const uuidv1 = require('uuid/v1')
       const newId = uuidv1()
-      console.log(this.calendar)
       const newCalendar = {
         ...this.calendar,
         idCalendrier: newId,
@@ -202,6 +202,7 @@ export default {
     },
     async moduleHorsFormation () {
       const { data: modules } = await api.getModulesHorsCodeFormation(this.calendar.codeFormation)
+      this.horsModules = modules
       this.dataModuleHorsFormation = await Promise.all(modules.map(async m => ({
         id: m.idModule,
         label: m.libelle,
@@ -237,21 +238,34 @@ export default {
     },
     printCalendar () {
       const idCal = this.$route.params.idCalendar
-      console.log(idCal)
       window.location.href = window.origin + '/pdf/' + idCal
+    },
+    handleModuleHorsFormationChange ({coursId, idModule}, checked) {
+      if (!this.calendar || !this.dataModuleHorsFormation || !coursId) return
+      if (checked) {
+        api.getCoursByModules(idModule).then(response => {
+          const cours = response.data.find(c => c.idCours === coursId)
+          api.incrementCours(coursId).then(response => {
+            this.calendar.cours.push({...cours, constraints: []})
+          })
+        })
+      } else {
+        const coursIndex = findIndex(this.calendar.cours, { idCours: coursId })
+        api.dincrementCours(coursId).then(response => {
+          this.calendar.cours.splice(coursIndex, 1)
+        })
+      }
     },
     handleModuleFormationChange ({coursId, idModule}, checked) {
       if (!this.calendar || !this.dataModuleFormation || !coursId) return
       if (checked) {
         const cours = this.coursByModule[idModule].find(c => c.idCours === coursId)
         api.incrementCours(coursId).then(response => {
-          console.log(response.data)
           this.calendar.cours.push({...cours, constraints: []})
         })
       } else {
         const coursIndex = findIndex(this.calendar.cours, { idCours: coursId })
         api.dincrementCours(coursId).then(response => {
-          console.log(response.data)
           this.calendar.cours.splice(coursIndex, 1)
         })
       }
