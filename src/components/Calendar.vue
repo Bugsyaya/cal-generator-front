@@ -50,7 +50,7 @@ export default {
   props: {
     lieux: { default: () => [], type: Array },
     modules: { default: () => [], type: Array },
-    calendrier: { type: Object },
+    calendrier: { default: {}, type: Object },
     calendrierVerifier: { type: Object }
   },
   data () {
@@ -86,6 +86,7 @@ export default {
       return m ? `${m.libelle}` : 'Module inconnu'
     },
     getPeriods () {
+      console.log(this.calendrier.periodOfTraining)
       if (!this.calendrier.cours.length) return []
       const periodes = []
 

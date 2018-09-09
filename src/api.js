@@ -43,6 +43,8 @@ export const getCoursByModules = idModule => fetcher.get(`modules/${idModule}/co
 
 export const generateCalendar = params => fetcher.post('generationCal', params)
 
+export const saveCal = params => fetcher.post('saveCal', params)
+
 export const updateCalendar = params => fetcher.post('updateCal', params)
 
 export const verifierCalendar = idCalendar => fetcher.get(`verificationCal/${idCalendar}`)

@@ -252,17 +252,21 @@ export default {
       contraintes: [
         {
           type: 'place',
-          value: ''
+          value: '',
+          id: ''
         },
         {
+          id: '',
           type: 'annualNumberOfHour',
           value: 0
         },
         {
           type: 'maxDurationOfTraining',
-          value: 0
+          value: 0,
+          id: ''
         },
         {
+          id: '',
           type: 'trainingFrequency',
           value: {
             maxWeekInTraining: 0,
@@ -271,11 +275,13 @@ export default {
         },
         {
           type: 'listPeriodeOfTrainingExclusion',
-          value: []
+          value: [],
+          id: ''
         },
         {
           type: 'listPeriodeOfTrainingInclusion',
-          value: []
+          value: [],
+          id: ''
         }
       ],
       form: {
@@ -351,11 +357,15 @@ export default {
           const line = find(this.contraintes, { type })
 
           if (isArray(contrainte)) {
+            const uuidv1 = require('uuid/v1')
             line.priority = isEmpty(contrainte) ? -1 : contrainte[0].priority
             line.value = contrainte.map((c, id) => ({ id, value: [c.value.start, c.value.end] }))
+            line.id = uuidv1()
           } else {
+            const uuidv1 = require('uuid/v1')
             line.priority = contrainte.priority
             line.value = contrainte.value
+            line.id = uuidv1()
           }
 
           this.contraintes.sort((c1, c2) => {
@@ -443,6 +453,9 @@ export default {
 
       const {listPeriodeOfTrainingExclusion, listPeriodeOfTrainingInclusion, trainingFrequency, ...contrainteObject} = keyBy(contraintes, 'type')
 
+      const uuidv1 = require('uuid/v1')
+      const uuidv2 = require('uuid/v1')
+      const uuidv3 = require('uuid/v1')
       const result = {
         ...contrainteObject,
         trainingFrequency:
@@ -452,21 +465,24 @@ export default {
               value: {
                 maxWeekInTraining: parseInt(trainingFrequency.value.maxWeekInTraining),
                 minWeekInCompany: parseInt(trainingFrequency.value.minWeekInCompany)
-              }
+              },
+              id: uuidv1()
             }
             : undefined,
         listPeriodeOfTrainingExclusion:
           listPeriodeOfTrainingExclusion.value.length
             ? listPeriodeOfTrainingExclusion.value.map(({value: [start, end]}) => ({
               ...listPeriodeOfTrainingExclusion,
-              value: { start, end }
+              value: { start, end },
+              id: uuidv2()
             }))
             : undefined,
         listPeriodeOfTrainingInclusion:
           listPeriodeOfTrainingInclusion.value.length
             ? listPeriodeOfTrainingInclusion.value.map(({value: [start, end]}) => ({
               ...listPeriodeOfTrainingInclusion,
-              value: { start, end }
+              value: { start, end },
+              id: uuidv3()
             }))
             : undefined
       }

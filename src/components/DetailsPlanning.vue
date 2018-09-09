@@ -11,12 +11,12 @@
       </el-button>
     </el-col>
     <el-col :span="2" :offset="1">
-      <el-button type="primary" round plain v-on:click="verifierCalendar()">
+      <el-button type="primary" round plain v-on:click="updateCalendar()">
         Sauvegarder
       </el-button>
     </el-col>
     <el-col :span="2" :offset="1">
-      <el-button type="primary" round plain v-on:click="verifierCalendar()">
+      <el-button type="primary" round plain v-on:click="newCalendar()">
         Nouveau calendrier
       </el-button>
     </el-col>
@@ -136,6 +136,26 @@ export default {
     )
   },
   methods: {
+    newCalendar () {
+      const uuidv1 = require('uuid/v1')
+      const newId = uuidv1()
+      console.log(this.calendar)
+      const newCalendar = {
+        ...this.calendar,
+        idCalendrier: newId,
+        status: 'created',
+        titre: this.calendar.titre + ' - copie',
+        description: this.calendar.description + ' - copie'
+      }
+      api.saveCal(newCalendar).then(response => {
+        this.$router.push('/planning/' + newCalendar.codeFormation + '/details/' + newId)
+      })
+    },
+    updateCalendar () {
+      api.updateCalendar(this.calendar).then(response => {
+
+      })
+    },
     getNbStagiaireByCours () {
       return api.getNbStagiaireByCours().then(response => {
         this.allNbStagiaireByCours = response.data

@@ -6,26 +6,28 @@
                       :name="modPrerequisPlanning.titre">
       <el-button @click="handleChoice(modPrerequisPlanning.idModulePrerequisPlanning)">Choisir</el-button>
 
-      <div v-for="modPrereq in modulePrerequis"
+      <div v-for="modPrereq in modPrerequisPlanning.idModulePrerequis"
            v-bind:key="modPrereq.idModulePrerequis">
-        {{ modPrereq.titre}}
-        <div v-if="modPrereq.idModuleObligatoire.length">
+        <p>
+          {{ getModulePrerequisByModulePrerequisPlanningId(modPrereq).titre }}
+        </p>
+        <div v-if="getModulePrerequisByModulePrerequisPlanningId(modPrereq).idModuleObligatoire.length">
           <p>
             Modules obligatoires :
           </p>
-          <ul v-for="obli in modPrereq.idModuleObligatoire" v-bind:key="obli" class="mod">
+          <ul v-for="obli in getModulePrerequisByModulePrerequisPlanningId(modPrereq).idModuleObligatoire" v-bind:key="obli" class="mod">
             <li>
               {{ getModuleTitre(obli).libelle }}
             </li>
           </ul>
         </div>
-        <div v-if="modPrereq.idModuleOptionnel.length">
+        <div v-if="getModulePrerequisByModulePrerequisPlanningId(modPrereq).idModuleOptionnel.length">
           <p>
             Modules optionnels :
           </p>
-          <ul v-for="opt in modPrereq.idModuleOptionnel" v-bind:key="opt" class="mod">
+          <ul v-for="obli in getModulePrerequisByModulePrerequisPlanningId(modPrereq).idModuleOptionnel" v-bind:key="obli" class="mod">
             <li>
-              {{ getModuleTitre(opt).libelle }}
+              {{ getModuleTitre(obli).libelle }}
             </li>
           </ul>
         </div>
@@ -36,6 +38,7 @@
 
 <script>
 import * as api from '../api'
+import includes from 'lodash/includes'
 
 export default {
   name: 'listePrerequis',
@@ -57,6 +60,14 @@ export default {
     )
   },
   methods: {
+    getModulePrerequisByModulePrerequisPlanningId (idModulePrerequis) {
+      console.log(this.modulePrerequis.find(mm => mm.idModulePrerequis === idModulePrerequis))
+      return this.modulePrerequis.find(mm => mm.idModulePrerequis === idModulePrerequis)
+    },
+    getModulePrerequisById (idModulePrerequis) {
+      // console.log(idModulePrerequis, this.modulePrerequis)
+      return this.modulePrerequis.find(mPrerequis => mPrerequis.idModulePrerequis === idModulePrerequis)
+    },
     getModPrerequis () {
       return api.getModulesPrerequis().then(response => {
         this.modulePrerequis = response.data

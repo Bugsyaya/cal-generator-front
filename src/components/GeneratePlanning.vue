@@ -23,6 +23,7 @@
     <el-col :span="24">
       <div v-if="!calendriers.length && loaded && !loading" class="message">
         Aucune solution possible pour les paramètres donnés.
+        <Calendar class="calendarGenerate" :calendrier="{}" :lieux="lieux" :modules="needModules" />
       </div>
       <el-row id="containerCalendriers" v-if="!loading && loaded">
         <el-col :span="24">

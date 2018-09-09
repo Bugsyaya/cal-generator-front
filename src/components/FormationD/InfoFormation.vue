@@ -94,8 +94,8 @@ export default {
         return api.createModulesPrerequisPlanning({
           idModulePrerequisPlanning: uuidv1(),
           idModulePrerequis: responses.map(response => response.data.idModulePrerequis),
-          titre: '',
-          description: '',
+          titre: this.titre,
+          description: this.description,
           codeFormation: this.$route.params.id
         })
       })
