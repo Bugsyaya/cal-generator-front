@@ -26,9 +26,11 @@
             id="calAlerte"
             title="Des changements ont été détectés depuis la génération de ce planning"
             type="error"
-            description="more text description"
             :closable="false"
             show-icon>
+            <ul v-for="desc in alerteMessage" v-bind:key="desc">
+              <li>{{ desc }}</li>
+            </ul>
           </el-alert>
         </div>
         <Calendar :calendrier="calendar" :lieux="lieux" :modules="needModules" :calendrierVerifier="calendrierVerifier" :horsModules="horsModules"/>
@@ -118,7 +120,8 @@ export default {
       calendrierVerifier: null,
       isAlerted: false,
       allNbStagiaireByCours: [],
-      coursByModule: {}
+      coursByModule: {},
+      alerteMessage: []
     }
   },
 
@@ -134,9 +137,20 @@ export default {
       this.checkBox()
     ).then(() =>
       this.moduleHorsFormation()
+    ).then(() =>
+      this.getDescription()
     )
   },
   methods: {
+    getDescription () {
+      this.calendar.cours.map(cour => {
+        if (cour.alerteModification) {
+          console.log(`Cours ${cour.libelleCours} : ${cour.alerteModification}`)
+          const libelleModule = this.modulesFormation.find(mod => mod.idModule === cour.idModule) || this.modulesHorsFormation.find(mod => mod.idModule === cour.idModule)
+          this.alerteMessage.push(`Cours ${libelleModule.libelle} : ${cour.alerteModification}`)
+        }
+      })
+    },
     newCalendar () {
       const uuidv1 = require('uuid/v1')
       const newId = uuidv1()
