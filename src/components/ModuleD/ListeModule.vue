@@ -1,6 +1,8 @@
 <template>
   <el-table
     id="listeModule"
+    style="width: 100%"
+    height=auto
     :data="tableData">
     <el-table-column
       type="expand">

@@ -1,6 +1,6 @@
 <template>
   <div id="pdf" >
-    <el-dialog title="Information supplémentaires" :visible.sync="dialogFormVisible">
+    <el-dialog title="Informations supplémentaires" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="Niveau du titre">
           <el-select v-model="form.level" placeholder="Sélectioner un niveau">

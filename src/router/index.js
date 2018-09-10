@@ -5,6 +5,7 @@ import PlanningLayout from '@/components/PlanningLayout'
 import AllPlanning from '@/components/AllPlanning'
 import GeneratePlanning from '@/components/GeneratePlanning'
 import DetailsPlanning from '@/components/DetailsPlanning'
+import Alerte from '@/components/alerte'
 import Formation from '@/components/Formation'
 import ListeModule from '@/components/ModuleD/ListeModule'
 import ListeFormation from '@/components/FormationD/ListeFormation'
@@ -46,7 +47,11 @@ export default new Router({
       name: 'ListeModule',
       component: ListeModule
     },
-
+    {
+      path: '/alerte',
+      name: 'Alerte',
+      component: Alerte
+    },
     {
       path: '/listeFormation',
       name: 'ListeFormation',
