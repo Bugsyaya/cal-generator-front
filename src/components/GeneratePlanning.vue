@@ -21,7 +21,7 @@
     </el-col>
 
     <el-col :span="24">
-      <div  class="message" v-if="!calendriers.length && loaded && !loading">
+      <div class="message" v-if="!calendriers.length && loaded && !loading">
         Aucune solution possible pour les paramètres donnés.
         <Calendar class="calendarGenerate" :calendrier="defaultCalendar()" :lieux="lieux" :modules="needModules" />
         <MoreInfoCal
