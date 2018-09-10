@@ -50,7 +50,8 @@ export default {
   props: {
     lieux: { default: () => [], type: Array },
     modules: { default: () => [], type: Array },
-    calendrier: { default: {}, type: Object },
+    horsModules: { default: () => [], type: Array },
+    calendrier: { default: () => {}, type: Object },
     calendrierVerifier: { type: Object }
   },
   data () {
@@ -82,12 +83,11 @@ export default {
     },
     formatLibelle (row, col, id) {
       if (!id) return 'Période Entreprise'
-      const m = this.modules.find(m => m.idModule === id)
+      const m = this.modules.find(m => m.idModule === id) || this.horsModules.find(m => m.idModule === id)
+      console.log(m, id, this.horsModules)
       return m ? `${m.libelle}` : 'Module inconnu'
     },
     getPeriods () {
-      console.log(this.calendrier.periodOfTraining)
-      if (!this.calendrier.cours.length) return []
       const periodes = []
 
       const cours = sortBy(this.calendrier.cours, 'debut')

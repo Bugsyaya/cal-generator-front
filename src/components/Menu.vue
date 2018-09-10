@@ -25,10 +25,10 @@ export default {
   name: 'monMenu',
   data: () => ({
     items: [
-      {nom: 'Planning', url: '/planning', icon: 'el-icon-date'},
+      {nom: 'Calendriers', url: '/planning', icon: 'el-icon-date'},
       {nom: 'Formations', url: '/listeFormation', icon: 'el-icon-tickets'},
-      {nom: 'ListeModule', url: '/listeModule', icon: 'el-icon-document'},
-      {nom: 'Alerte', url: '/alerte', icon: 'el-icon-warning'}
+      {nom: 'Modules', url: '/listeModule', icon: 'el-icon-document'},
+      {nom: 'Alertes', url: '/alerte', icon: 'el-icon-warning'}
     ],
     isCollapse: true,
     alertNumber: 0

@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     async getPrerequisPlanning (id) {
+      if (!id) return
       const { data: prerequisPlanning } = await api.getModulesPrerequisPlanningById(id)
       this.prerequisPlanning = prerequisPlanning
       const { data: allPrerequis } = await api.getModulesPrerequis()

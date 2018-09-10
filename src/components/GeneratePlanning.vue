@@ -21,9 +21,22 @@
     </el-col>
 
     <el-col :span="24">
-      <div v-if="!calendriers.length && loaded && !loading" class="message">
+      <div  class="message" v-if="!calendriers.length && loaded && !loading">
         Aucune solution possible pour les paramètres donnés.
-        <Calendar class="calendarGenerate" :calendrier="{}" :lieux="lieux" :modules="needModules" />
+        <Calendar class="calendarGenerate" :calendrier="defaultCalendar()" :lieux="lieux" :modules="needModules" />
+        <MoreInfoCal
+          id="moreInfoCal"
+          class="calendarGenerate"
+          buttonName="Sauvegarder"
+          messageSuccess="Le calendrier a bien été sauvegardé"
+          messageError="Une erreur s'est produite"
+          :setTitre="setTitle"
+          :setDescription="setDescription"
+          titrePopUp="Sauvegarde du calendrier"
+          :needRedirection=true
+          titleAndDescNeeded=true
+          :calendrier="defaultCalendar()"
+        />
       </div>
       <el-row id="containerCalendriers" v-if="!loading && loaded">
         <el-col :span="24">
@@ -35,7 +48,7 @@
                             buttonName="Sauvegarder"
                             messageSuccess="Le calendrier a bien été sauvegardé"
                             messageError="Une erreur s'est produite"
-                            :setTitre="setTitre"
+                            :setTitre="setTitle"
                             :setDescription="setDescription"
                             titrePopUp="Sauvegarde du calendrier"
                             :needRedirection=true
@@ -53,6 +66,7 @@
 import Calendar from './Calendar'
 import MoreInfoCal from './MoreInfoCal'
 import * as api from '../api'
+import uuidv1 from 'uuid/v1'
 
 export default {
   name: 'generatePlanning',
@@ -78,6 +92,15 @@ export default {
     numberOfCalendarToFound: 5
   }),
   methods: {
+    defaultCalendar () {
+      return {
+        idCalendrier: uuidv1(),
+        codeFormation: this.codeFormation,
+        periodOfTraining: { start: this.periodeFormation[0], end: this.periodeFormation[1] },
+        cours: [],
+        status: 'created'
+      }
+    },
     showPlanning () {
       this.calendriers = []
       this.loading = true

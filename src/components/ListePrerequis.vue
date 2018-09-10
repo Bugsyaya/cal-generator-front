@@ -38,7 +38,6 @@
 
 <script>
 import * as api from '../api'
-import includes from 'lodash/includes'
 
 export default {
   name: 'listePrerequis',
@@ -61,7 +60,6 @@ export default {
   },
   methods: {
     getModulePrerequisByModulePrerequisPlanningId (idModulePrerequis) {
-      console.log(this.modulePrerequis.find(mm => mm.idModulePrerequis === idModulePrerequis))
       return this.modulePrerequis.find(mm => mm.idModulePrerequis === idModulePrerequis)
     },
     getModulePrerequisById (idModulePrerequis) {
