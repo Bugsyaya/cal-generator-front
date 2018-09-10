@@ -42,7 +42,7 @@ import * as api from '../api'
 export default {
   name: 'listePrerequis',
   props: {
-    setIdPrerequisPlanning: Function
+    setIdPrerequisPlanning: {type: Function, default: () => {}}
   },
   data () {
     return {
@@ -85,6 +85,7 @@ export default {
       return this.allModules.find(mod => mod.idModule === idModule) || {libelle: 'Module inconnu'}
     },
     handleChoice (idPrerequisPlanning) {
+      console.log('idPrerequisPlanning : ', idPrerequisPlanning)
       this.setIdPrerequisPlanning(idPrerequisPlanning)
     }
   }
