@@ -3,15 +3,16 @@ services:
   front:
     image: bugsyaya/eni-cal-front
     ports:
-      - "8081:80"
+    - "8081:80"
     volumes:
-      - ./config.json:/usr/app/dist/static/config.json
+    - ./config.json:/usr/app/dist/static/config.json
 
   back:
     image: bugsyaya/eni-cal-back
     ports:
-      - "9001:80"
+    - "9001:80"
     environment:
+      CHOCO_URL: http://choco
       MONGO_HOST: mongo
       MONGO_PORT: 27017
       MONGO_DATABASE: CalDatabase
@@ -25,14 +26,14 @@ services:
   choco:
     image: bugsyaya/eni-cal-choco
     ports:
-      - "8001:80"
+    - "8001:80"
 
   mongo:
     image: bugsyaya/eni-mongo-base
     ports:
-      - "27018:27017"
+    - "27018:27017"
 
   sqlserver:
     image: bugsyaya/eni-sqlserver-sample-data-set
     ports:
-     - "1434:1433"
+    - "1434:1433"
