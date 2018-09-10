@@ -42,7 +42,7 @@ import * as api from '../api'
 export default {
   name: 'listePrerequis',
   props: {
-    setIdPrerequisPlanning: {type: Function, default: () => {}}
+    setIdModulePrerequisPlanning: {type: Function, default: () => {}}
   },
   data () {
     return {
@@ -63,7 +63,6 @@ export default {
       return this.modulePrerequis.find(mm => mm.idModulePrerequis === idModulePrerequis)
     },
     getModulePrerequisById (idModulePrerequis) {
-      // console.log(idModulePrerequis, this.modulePrerequis)
       return this.modulePrerequis.find(mPrerequis => mPrerequis.idModulePrerequis === idModulePrerequis)
     },
     getModPrerequis () {
@@ -85,8 +84,7 @@ export default {
       return this.allModules.find(mod => mod.idModule === idModule) || {libelle: 'Module inconnu'}
     },
     handleChoice (idPrerequisPlanning) {
-      console.log('idPrerequisPlanning : ', idPrerequisPlanning)
-      this.setIdPrerequisPlanning(idPrerequisPlanning)
+      this.setIdModulePrerequisPlanning(idPrerequisPlanning)
     }
   }
 

@@ -105,6 +105,13 @@ export default {
       this.calendriers = []
       this.loading = true
       const [start, end] = this.periodeFormation
+      console.log('Generate', {
+        codeFormation: this.codeFormation,
+        periodOfTraining: { start, end },
+        idConstraint: this.idConstraint,
+        idModulePrerequisPlanning: this.idModulePrerequisPlanning,
+        numberOfCalendarToFound: this.numberOfCalendarToFound
+      })
       api.generateCalendar({
         codeFormation: this.codeFormation,
         periodOfTraining: { start, end },
