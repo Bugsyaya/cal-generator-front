@@ -26,15 +26,14 @@ export default {
     this.getAlerte()
   },
   methods: {
-    redir(idCalendrier, codeFormation) {
+    redir (idCalendrier, codeFormation) {
       window.location.href = window.origin + '/planning/' + codeFormation + '/details/' + idCalendrier
     },
     getAlerte () {
-      console.log('coucouc')
       this.loading = true
       api.synchronise().then(response => {
-          this.calendriers = response.data
-        })
+        this.calendriers = response.data
+      })
       this.loaded = true
       this.loading = false
     }

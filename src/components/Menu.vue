@@ -34,16 +34,11 @@ export default {
     alertNumber: 0
   }),
   created () {
-    // this.getSynch().then(() =>
-        this.getNumberAlert()
-    // )
+    this.getNumberAlert()
   },
   methods: {
     log () {
     },
-    // getSynch () {
-    //   return api.synchronise()
-    // },
     getNumberAlert () {
       api.getAlerteNm('alerte')
         .then(response => {
